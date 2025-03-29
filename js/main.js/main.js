@@ -53,9 +53,9 @@ const studentDataBase = [
 const professorDataBase = [];
 
 // Declaración de funciones 
-function checkUserInformation(dataBase, user, password) {
+function checkUserInformation(dataBase, userInfo1, userInfo2) {
     for (let i = 0; i < dataBase.length; i++) {
-        if (dataBase[i].user === user && dataBase[i].password === password) {
+        if (dataBase[i].userInfo1 === userInfo1 && dataBase[i].userInfo2 === userInfo2) {
             return i;
         };
     };
@@ -96,42 +96,89 @@ function showStudentDashboard(dataBase, index) {
     };
 };
 
+function signUpStudent(student, dataBase) {
+    dataBase[student].nombre = prompt("Ingresa: Nombre y Apellido");
+    dataBase[student].mail = prompt("Ingresá: Mail");
+    dataBase[student].contraseña = prompt("Ingresa: Contraseña");
+};
 
-//Bienvenida y elección de rol 
+function signUpStudent(dataBase) {
+    do {
+        //Pido los datos del usuario:
+        let mail = prompt("Ingrese mail");
+        let contraseña = prompt("Ingrese contraseña");
 
-let userType = prompt("Bienvenidx! ¿Sos alumnx o profe? ingresá una a si sos alumnx y una p si sos profe");
+        //Chequeo si los datos estan en la base 
+        let userInDataBase = checkUserInformation(studentDataBase, mail, contraseña);
+
+        if (userInDataBase !== false) {
+            //Si estan le doy acceso
+            showStudentDashboard(studentDataBase, userInDataBase);
+        };
+
+        //Si no estan le aviso y le pregunto si desea intentar de  nuevo
+        let tryAgain = confirm("Los datos  no coinciden.\n" +
+            "¿Querés intentar de nuevo?\n" +
+            "Si: Confirmar / No: Cancelar"
+        );
+
+
+    } while (userInDataBase === false && tryAgain === true);
+    //Que  deberia hacer acá? 
+};
+
+//Inicio del programa
+
+let userType = prompt(
+    "¡Bienvenidx!\n" +
+    "¿Sos alumnx o profe?\n" +
+    "Ingresá 'a' si sos alumnx\n" +
+    "Ingresá 'p' si sos profe"
+);
 userType = userType.toLowerCase();
 
-let isActiveUser = prompt("¿Ya etsas registradx? Si: Confirmar / No: Cancelar");
+let isActiveUser = prompt(
+    "¿Ya etsas registradx?\n" +
+    "Si: Confirmar\n" +
+    "No: Cancelar"
+);
 
 // paso a seguir si es profe o alumnx
 
 if (userType === "a" && isActiveUser === true) {
 
-    do {
-        //Pido los datos del usuario:
-        let userMail = prompt("Ingrese mail");
-        let userPassword = prompt("Ingrese contraseña");
-
-        //Chequeo si los datos estan en la base 
-        let access = checkUserInformation(studentDataBase, userMail, userPassword);
-
-        if (access !== false) {
-            //Si estan le doy acceso
-            showStudentDashboard(studentDataBase, access);
-        };
-
-        //Si no estan le aviso y le pregunto si desea intentar de  nuevo
-        let tryAgain = confirm("Los datos  no coinciden. ¿Deseas intentar de nuevo? Si: Confirmar / No: Cancelar");
-
-
-    } while (access === false && tryAgain === true);
-    //Que  deberia hacer acá? 
-
+    loginStudent(studentDataBase);
 
 } else if (userType === "a" && isActiveUser === false) {
-    // llamo a la funcion de singup
-    studentDataBase.push(signUpStudent());
+
+    //Pido los datos
+    let dni = Number(prompt("Ingresá tu numero de DNI, sin puntos"));
+    let legajo = prompt(
+        "Ingresa tu número de legajo.\n" +
+        "Si no lo sabés, comunicate con la Dirección de la Escuela."
+    );
+
+    let userInDataBase = checkUserInformation(studentDataBase, dni, legajo)
+    //Si no esta le aviso que no esta 
+    if (userInDataBase === false) {
+        alert("No estás cargado en la base de datos.\n" +
+            "Comunicate con la Dirección de la Escuela."
+        );
+    } else {
+
+        signUpStudent(studentDataBase, userInDataBase);
+        alert("¡Registro exitoso!");
+        const login = confirm("¿Querés Ingresar a tu cuenta?");
+        if (login === true) {
+            loginStudent(studentDataBase);
+        } else {
+            alert("¡Muchas gracias por tu visita!\n" +
+                "Nos vemos pronto :)"
+            );
+        };
+    };
+
+
 };
 
 if (userType === "p" && isActiveUser === true) {
@@ -139,6 +186,7 @@ if (userType === "p" && isActiveUser === true) {
     loginProfessor(professorDataBase, showProfessorDashboard);
 
 } else if (userType === "p" && isActiveUser === false) {
-    // llamo a la funcion de singup
+
+
     professorDataBase.push(signUpProfessor());
 };
