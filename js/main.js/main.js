@@ -4,7 +4,7 @@ const studentDataBase = [
     {
         nombre: "Sol Martínez",
         mail: "sol.martinez@mail.com",
-        password: "sol1234",
+        contraseña: "sol1234",
         dni: "40123456",
         legajo: "A001",
         notas: {
@@ -18,7 +18,7 @@ const studentDataBase = [
     {
         nombre: "Bruno López",
         mail: "bruno.lopez@mail.com",
-        password: "bruno2024",
+        contraseña: "bruno2024",
         dni: "40991234",
         legajo: "A004",
         notas: {
@@ -32,7 +32,7 @@ const studentDataBase = [
     {
         nombre: "",
         mail: "",
-        password: "",
+        contraseña: "",
         dni: "40876543",
         legajo: "A002",
         notas: {},
@@ -42,7 +42,7 @@ const studentDataBase = [
     {
         nombre: "",
         mail: "",
-        password: "",
+        contraseña: "",
         dni: "40987654",
         legajo: "A003",
         notas: {},
@@ -50,7 +50,50 @@ const studentDataBase = [
         mensajes: []
     }
 ];
-const professorDataBase = [];
+const professorDataBase = [
+    {
+        nombre: "Laura Fernández",
+        mail: "laura.fernandez@escuela.edu.ar",
+        contraseña: "laura123",
+        dni: "32145678",
+        legajo: "P001",
+        numeroEmpleado: "E001",
+        materia: "Lengua y Literatura",
+        mensajes: []
+    },
+    {
+        nombre: "Carlos Gutiérrez",
+        mail: "carlos.gutierrez@escuela.edu.ar",
+        contraseña: "carlos456",
+        dni: "33998877",
+        legajo: "P002",
+        numeroEmpleado: "E002",
+        materia: "Historia",
+        mensajes: []
+    },
+    {
+        nombre: "",
+        mail: "",
+        contraseña: "",
+        dni: "33445566",
+        legajo: "P003",
+        numeroEmpleado: "E003",
+        materia: "",
+        mensajes: []
+    },
+    {
+        nombre: "",
+        mail: "",
+        contraseña: "",
+        dni: "32221100",
+        legajo: "P004",
+        numeroEmpleado: "E004",
+        materia: "",
+        mensajes: []
+    }
+
+
+];
 
 // Declaración de funciones 
 function checkUserInformation(dataBase, userInfo1, userInfo2) {
@@ -96,17 +139,17 @@ function showStudentDashboard(dataBase, index) {
     };
 };
 
-function signUpStudent(student, dataBase) {
-    dataBase[student].nombre = prompt("Ingresa: Nombre y Apellido");
-    dataBase[student].mail = prompt("Ingresá: Mail");
-    dataBase[student].contraseña = prompt("Ingresa: Contraseña");
+function signUpStudent(dataBase, index) {
+    dataBase[index].nombre = prompt("Ingresa: Nombre y Apellido");
+    dataBase[index].mail = prompt("Ingresá: Mail");
+    dataBase[index].contraseña = prompt("Ingresa: Contraseña");
 };
 
-function signUpStudent(dataBase) {
+function loginStudent(dataBase) {
     do {
         //Pido los datos del usuario:
-        let mail = prompt("Ingrese mail");
-        let contraseña = prompt("Ingrese contraseña");
+        let mail = prompt("Ingresá tu mail");
+        let contraseña = prompt("Ingresá tu contraseña");
 
         //Chequeo si los datos estan en la base 
         let userInDataBase = checkUserInformation(studentDataBase, mail, contraseña);
@@ -127,6 +170,77 @@ function signUpStudent(dataBase) {
     //Que  deberia hacer acá? 
 };
 
+function loginProfessor(dataBase) {
+    do {
+        //Pido los datos del usuario:
+        let numeroEmpleado = prompt("Ingresá tu Número de Empleado");
+        let contraseña = prompt("Ingresá tu contraseña");
+
+        //Chequeo si los datos estan en la base 
+        let userInDataBase = checkUserInformation(professorDataBase, numeroEmpleado, contraseña);
+
+        if (userInDataBase !== false) {
+            //Si estan le doy acceso
+            showProfessorDashboard(professorDataBase, userInDataBase);
+        };
+
+        //Si no estan le aviso y le pregunto si desea intentar de  nuevo
+        let tryAgain = confirm("Los datos  no coinciden.\n" +
+            "¿Querés intentar de nuevo?\n" +
+            "Si: Confirmar / No: Cancelar"
+        );
+
+
+    } while (userInDataBase === false && tryAgain === true);
+};
+
+function signUpProfessor(dataBase, index) {
+    dataBase[index].nombre = prompt("Ingresá: Nombre y Apellido");
+    dataBase[index].mail = prompt("Ingresá: Mail");
+    dataBase[index].contraseña = prompt("Ingresá: Contraseña");
+    dataBase[index].materia = prompt("Ingresá: Materia que enseñas")
+};
+
+function showProfessorDashboard(dataBase, index) {
+    const currentUser = dataBase[index];
+    let option = "";
+
+    while (option !== "3") {
+        option = prompt(
+            `Hola, profe ${currentUser.nombre} 👩‍🏫\n` +
+            `Materia: ${currentUser.materia}\n\n` +
+            "¿Qué desea hacer?\n" +
+            "1. Ver mensajes recibidos\n" +
+            "2. Cargar aviso para alumnxs\n" +
+            "3. Cerrar sesión"
+        );
+
+        if (option === "1") {
+            if (currentUser.mensajes.length === 0) {
+                alert("No tiene mensajes nuevos.");
+            } else {
+                let mensajesTexto = "Mensajes recibidos:\n";
+
+                for (let i = 0; i < currentUser.mensajes.length; i++) {
+                    mensajesTexto += "- " + teacher.mensajes[i] + "\n";
+                };
+
+                alert(mensajesTexto);
+            };
+
+        } else if (option === "2") {
+            let aviso = prompt("Escribí el nuevo aviso o tarea:");
+            alert("El aviso se publicó: " + aviso);
+
+        } else if (option === "3") {
+            alert("Sesión cerrada. ¡Hasta luego, profe!");
+        } else {
+            alert("Opción inválida. Intentelo de nuevo.");
+        };
+    };
+
+};
+
 //Inicio del programa
 
 let userType = prompt(
@@ -144,6 +258,7 @@ let isActiveUser = prompt(
 );
 
 // paso a seguir si es profe o alumnx
+//ALUMNX:
 
 if (userType === "a" && isActiveUser === true) {
 
@@ -152,17 +267,17 @@ if (userType === "a" && isActiveUser === true) {
 } else if (userType === "a" && isActiveUser === false) {
 
     //Pido los datos
-    let dni = Number(prompt("Ingresá tu numero de DNI, sin puntos"));
+    let dni = prompt("Ingresá tu numero de DNI, sin puntos");
     let legajo = prompt(
         "Ingresa tu número de legajo.\n" +
-        "Si no lo sabés, comunicate con la Dirección de la Escuela."
+        "Si no lo sabés, comunicate con lxs directivxs de la Escuela."
     );
 
     let userInDataBase = checkUserInformation(studentDataBase, dni, legajo)
     //Si no esta le aviso que no esta 
     if (userInDataBase === false) {
         alert("No estás cargado en la base de datos.\n" +
-            "Comunicate con la Dirección de la Escuela."
+            "Comunicate con lxs directivxs de la Escuela."
         );
     } else {
 
@@ -173,7 +288,7 @@ if (userType === "a" && isActiveUser === true) {
             loginStudent(studentDataBase);
         } else {
             alert("¡Muchas gracias por tu visita!\n" +
-                "Nos vemos pronto :)"
+                "Nos vemos pronto "
             );
         };
     };
@@ -181,12 +296,42 @@ if (userType === "a" && isActiveUser === true) {
 
 };
 
+//PROFE:
+
 if (userType === "p" && isActiveUser === true) {
     //llamo a funcion de login que recibe de parametros una funcion y la base de datos. 
-    loginProfessor(professorDataBase, showProfessorDashboard);
+    loginProfessor(professorDataBase);
 
 } else if (userType === "p" && isActiveUser === false) {
 
+    //Pido los datos
+    let numeroEmpleado = prompt(
+        "Ingresá tu numero de empleadx.\n" +
+        "Si no lo sabés, comunicate con la Dirección de la Escuela."
+    );
+    let legajo = prompt(
+        "Ingresa tu número de legajo.\n" +
+        "Si no lo sabés, Comunicate con lxs directivxs de la Escuela."
+    );
 
-    professorDataBase.push(signUpProfessor());
+    let userInDataBase = checkUserInformation(professorDataBase, numeroEmpleado, legajo)
+    //Si no esta le aviso que no esta 
+    if (userInDataBase === false) {
+        alert("No estás cargado en la base de datos.\n" +
+            "Comunicate con lxs directivxs de la Escuela."
+        );
+    } else {
+
+        signUpProfessor(professorDataBase, userInDataBase);
+        alert("¡Registro exitoso!");
+        const login = confirm("¿Querés Ingresar a tu cuenta?");
+        if (login === true) {
+            loginProfessor(professorDataBase);
+        } else {
+            alert("¡Muchas gracias por tu visita!\n" +
+                "Nos vemos pronto :)"
+            );
+        };
+    };
+
 };
