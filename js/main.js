@@ -65,6 +65,38 @@ function validateInput(value, type) {
             return true;
     }
 };
+function mostrarFormularioRegistro() {
+    const extraFields = document.getElementById("extra-fields");
+    extraFields.innerHTML = ""; // Limpia campos anteriores
+
+    if (currentRole === ROLES.STUDENT) {
+        extraFields.innerHTML += `
+        <label for="register-dni">DNI:</label>
+        <input type="text" id="register-dni" required>
+  
+        <label for="register-legajo">Legajo:</label>
+        <input type="text" id="register-legajo" required>
+      `;
+    } else if (currentRole === ROLES.TEACHER) {
+        extraFields.innerHTML += `
+        <label for="register-dni">DNI:</label>
+        <input type="text" id="register-dni" required>
+  
+        <label for="register-legajo">Legajo:</label>
+        <input type="text" id="register-legajo" required>
+  
+        <label for="register-numeroEmpleado">Número de Empleadx:</label>
+        <input type="text" id="register-numeroEmpleado" required>
+  
+        <label for="register-materia">Materia:</label>
+        <input type="text" id="register-materia" required>
+      `;
+    }
+
+    ocultarSeccion("seleccion-rol");
+    mostrarSeccion("form-register");
+}
+
 
 
 // Al cargar la página
@@ -136,6 +168,19 @@ document.getElementById("btn-registrarse").addEventListener("click", () => {
     mostrarSeccion("seleccion-rol");
 });
 
+document.getElementById("btn-alumnx").addEventListener("click", () => {
+    currentRole = ROLES.STUDENT;
+    ocultarSeccion("seleccion-rol");
+    mostrarSeccion("form-login");
+});
+
+document.getElementById("btn-profe").addEventListener("click", () => {
+    currentRole = ROLES.TEACHER;
+    ocultarSeccion("seleccion-rol");
+    mostrarSeccion("form-login");
+});
+
+
 document.getElementById("form-login").addEventListener("submit", (e) => {
     e.preventDefault(); // Evita que recargue la página
 
@@ -181,6 +226,17 @@ document.getElementById("form-login").addEventListener("submit", (e) => {
         alert("Los datos ingresados no coinciden con ningún usuario registrado.");
     }
 });
+
+// Conecto los botones de registro con esta función
+document.getElementById("btn-registrarse").addEventListener("click", () => {
+    mostrarFormularioRegistro();
+});
+
+document.getElementById("btn-registrarse-desde-sesion").addEventListener("click", () => {
+    mostrarFormularioRegistro();
+});
+
+
 
 
 
