@@ -41,10 +41,18 @@ class Teacher extends User {
 // Función para mostrar/ocultar secciones
 function mostrarSeccion(id) {
     document.getElementById(id).style.display = "block";
-}
+};
 function ocultarSeccion(id) {
     document.getElementById(id).style.display = "none";
-}
+};
+
+// Bases de datos activas (se cargan desde data.js)
+let studentDataBase = [...initialStudents];
+let teacherDataBase = [...initialTeachers];
+
+// Variable para guardar el rol seleccionado
+let currentRole = null;
+
 
 // Al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
@@ -114,6 +122,51 @@ document.getElementById("btn-registrarse").addEventListener("click", () => {
     ocultarSeccion("seleccion-inicial");
     mostrarSeccion("seleccion-rol");
 });
+
+document.getElementById("form-login").addEventListener("submit", (e) => {
+    e.preventDefault(); // Evita que recargue la página
+
+    const mail = document.getElementById("login-mail").value.trim();
+    const password = document.getElementById("login-password").value;
+
+    // Validaciones con regex
+    if (!validateInput(mail, "email")) {
+        alert("El mail ingresado no es válido.");
+        return;
+    }
+
+    if (!validateInput(password, "password")) {
+        alert("La contraseña debe tener al menos 6 caracteres, una mayúscula y un número.");
+        return;
+    }
+
+    // Buscar en la base correspondiente
+    let base = currentRole === ROLES.STUDENT ? studentDataBase : teacherDataBase;
+
+    const userIndex = base.findIndex(user => user.mail === mail);
+
+    if (userIndex !== -1 && base[userIndex].contraseña === password) {
+        // Guardar sesión
+        localStorage.setItem("lastUser", JSON.stringify({
+            mail: base[userIndex].mail,
+            nombre: base[userIndex].nombre,
+            rol: base[userIndex].rol
+        }));
+
+        // Mostrar dashboard
+        ocultarSeccion("form-login");
+
+        if (currentRole === ROLES.STUDENT) {
+            showStudentDashboard(base, userIndex);
+        } else {
+            showTeacherDashboard(base, userIndex);
+        }
+
+    } else {
+        alert("Los datos ingresados no coinciden con ningún usuario registrado.");
+    }
+});
+
 
 
 
