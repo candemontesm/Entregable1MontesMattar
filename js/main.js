@@ -15,8 +15,8 @@ class User {
         this.dni = data.dni;
         this.legajo = data.legajo;
         this.mensajes = data.mensajes || [];
-    }
-}
+    };
+};
 
 // Clase Student que hereda de User
 class Student extends User {
@@ -25,8 +25,8 @@ class Student extends User {
         this.rol = ROLES.STUDENT;
         this.notas = data.notas || {};
         this.tareasPendientes = data.tareasPendientes || [];
-    }
-}
+    };
+};
 
 // Clase Teacher que hereda de User
 class Teacher extends User {
@@ -35,12 +35,93 @@ class Teacher extends User {
         this.rol = ROLES.TEACHER;
         this.numeroEmpleado = data.numeroEmpleado;
         this.materia = data.materia;
-    }
+    };
+};
+
+// Función para mostrar/ocultar secciones
+function mostrarSeccion(id) {
+    document.getElementById(id).style.display = "block";
+}
+function ocultarSeccion(id) {
+    document.getElementById(id).style.display = "none";
 }
 
-let studentDataBase = [...initialStudents];
-let teacherDataBase = [...initialTeachers];
+// Al cargar la página
+window.addEventListener("DOMContentLoaded", () => {
+    const lastUser = JSON.parse(localStorage.getItem("lastUser"));
 
+    if (lastUser) {
+        // Si hay un usuario guardado, mostramos el login directo
+        mostrarSeccion("inicio-sesion");
+
+        const saludo = document.getElementById("saludo-personalizado");
+        saludo.textContent = `Bienvenidx ${lastUser.nombre} al Aula Virtual del CPEM 30`;
+
+    } else {
+        // Si no hay sesión guardada, mostramos opciones básicas
+        mostrarSeccion("seleccion-inicial");
+    }
+});
+
+document.getElementById("btn-ingresar-sesion").addEventListener("click", () => {
+    const lastUser = JSON.parse(localStorage.getItem("lastUser"));
+    const inputPassword = document.getElementById("input-password").value;
+    let base = null;
+
+    // Determinar base según el rol
+    if (lastUser.rol === ROLES.STUDENT) {
+        base = studentDataBase;
+    } else if (lastUser.rol === ROLES.TEACHER) {
+        base = teacherDataBase;
+    }
+
+    // Buscar al usuario en la base según mail
+    const userIndex = base.findIndex(user => user.mail === lastUser.mail);
+
+    if (userIndex !== -1 && base[userIndex].contraseña === inputPassword) {
+        // Contraseña válida → mostrar dashboard
+        if (lastUser.rol === ROLES.STUDENT) {
+            showStudentDashboard(base, userIndex);
+        } else if (lastUser.rol === ROLES.TEACHER) {
+            showTeacherDashboard(base, userIndex);
+        }
+    } else {
+        alert("La contraseña no coincide. Intentá nuevamente.");
+    }
+});
+
+// Botón "Ingresar con usuario diferente"
+document.getElementById("btn-cambiar-usuario").addEventListener("click", () => {
+    localStorage.removeItem("lastUser"); // Eliminamos sesión guardada
+    ocultarSeccion("inicio-sesion");
+    mostrarSeccion("seleccion-rol");
+});
+
+// Botón "Registrarse" desde sesión
+document.getElementById("btn-registrarse-desde-sesion").addEventListener("click", () => {
+    ocultarSeccion("inicio-sesion");
+    mostrarSeccion("seleccion-rol");
+});
+
+// Botón "Ingresar" desde página inicial (sin sesión previa)
+document.getElementById("btn-ingresar").addEventListener("click", () => {
+    ocultarSeccion("seleccion-inicial");
+    mostrarSeccion("seleccion-rol");
+});
+
+// Botón "Registrarse" desde página inicial
+document.getElementById("btn-registrarse").addEventListener("click", () => {
+    ocultarSeccion("seleccion-inicial");
+    mostrarSeccion("seleccion-rol");
+});
+
+
+
+
+
+
+
+/*
 
 // Declaración de funciones 
 function checkUserInformation(dataBase, prop1, value1, prop2, value2) {
@@ -310,7 +391,7 @@ if (!cancelado) {
     };
 };
 
-
+*/
 
 
 

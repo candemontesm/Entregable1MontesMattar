@@ -8,11 +8,45 @@
 </head>
 
 <body>
-    <h1>Bienvenidx al simulador: Aula Virtual CPEM 30</h1>
-    <p>
-        Este simulador permite a estudiantes y docentes del CPEM 30 registrarse e ingresar a una plataforma virtual.
-        Desde allí pueden consultar notas, tareas pendientes, enviar mensajes o publicar avisos, según su rol.
-    </p>
+    <h1 id="main-title">Bienvenidx al Aula Virtual del CPEM 30</h1>
+
+    <section id="inicio-sesion" style="display: none;">
+        <p id="saludo-personalizado"></p>
+        <input type="password" id="input-password" placeholder="Ingresá tu contraseña">
+        <button id="btn-ingresar-sesion">Aceptar</button>
+        <br>
+        <button id="btn-cambiar-usuario">Ingresar con usuario diferente</button>
+        <button id="btn-registrarse-desde-sesion">Registrarse</button>
+    </section>
+
+    <section id="seleccion-inicial" style="display: none;">
+        <button id="btn-ingresar">Ingresar</button>
+        <button id="btn-registrarse">Registrarse</button>
+    </section>
+
+    <section id="seleccion-rol" style="display: none;">
+        <p>Seleccioná tu rol:</p>
+        <button id="btn-alumnx">Soy alumnx</button>
+        <button id="btn-profe">Soy profe</button>
+    </section>
+
+    <!-- Acá más adelante mostraremos los formularios de login y registro -->
+    <section id="formulario-contenedor" style="display: none;">
+        <!-- Formulario de login (reutilizable para ambos roles) -->
+        <form id="form-login" style="display: none;">
+            <h2>Ingresá a tu cuenta</h2>
+            <label for="login-mail">Mail:</label>
+            <input type="email" id="login-mail" required>
+
+            <label for="login-password">Contraseña:</label>
+            <input type="password" id="login-password" required>
+
+            <button type="submit">Ingresar</button>
+        </form>
+
+    </section>
+
+
     <script src="./js/main.js"></script>
     <script src="js/data.js"></script>
 </body>
