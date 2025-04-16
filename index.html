@@ -42,6 +42,27 @@
             <input type="password" id="login-password" required>
 
             <button type="submit">Ingresar</button>
+            <p id="login-error" style="color: red;"></p>
+
+            <form id="form-register" style="display: none;">
+                <h2>Registrate</h2>
+
+                <label for="register-nombre">Nombre y Apellido:</label>
+                <input type="text" id="register-nombre" required>
+
+                <label for="register-mail">Mail:</label>
+                <input type="email" id="register-mail" required>
+
+                <label for="register-password">Contraseña:</label>
+                <input type="password" id="register-password" required>
+
+                <div id="extra-fields"></div> <!-- Campos según rol -->
+
+                <button type="submit">Registrarse</button>
+                <p id="register-error" style="color: red;"></p>
+            </form>
+
+
         </form>
 
     </section>

@@ -38,6 +38,13 @@ class Teacher extends User {
     };
 };
 
+// Bases de datos activas (se cargan desde data.js)
+let studentDataBase = [...initialStudents];
+let teacherDataBase = [...initialTeachers];
+
+// Variable para guardar el rol seleccionado
+let currentRole = null;
+
 // Función para mostrar/ocultar secciones
 function mostrarSeccion(id) {
     document.getElementById(id).style.display = "block";
@@ -46,12 +53,18 @@ function ocultarSeccion(id) {
     document.getElementById(id).style.display = "none";
 };
 
-// Bases de datos activas (se cargan desde data.js)
-let studentDataBase = [...initialStudents];
-let teacherDataBase = [...initialTeachers];
+function validateInput(value, type) {
+    if (!value) return false;
 
-// Variable para guardar el rol seleccionado
-let currentRole = null;
+    switch (type) {
+        case "email":
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        case "password":
+            return /^(?=.*[A-Z])(?=.*\d).{6,}$/.test(value);
+        default:
+            return true;
+    }
+};
 
 
 // Al cargar la página
@@ -130,13 +143,15 @@ document.getElementById("form-login").addEventListener("submit", (e) => {
     const password = document.getElementById("login-password").value;
 
     // Validaciones con regex
+    const errorMsg = document.getElementById("login-error");
+
     if (!validateInput(mail, "email")) {
-        alert("El mail ingresado no es válido.");
+        errorMsg.textContent = "El mail ingresado no es válido.";
         return;
     }
 
     if (!validateInput(password, "password")) {
-        alert("La contraseña debe tener al menos 6 caracteres, una mayúscula y un número.");
+        errorMsg.textContent = "La contraseña debe tener al menos 6 caracteres, una mayúscula y un número.";
         return;
     }
 
