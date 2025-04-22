@@ -28,6 +28,13 @@ function validateInput(value, type) {
     }
 };
 
+function cerrarSesion() {
+    localStorage.removeItem("lastUser");
+    ocultarSeccion("dashboard");
+    mostrarSeccion("seleccion-inicial");
+}
+
+
 function mostrarFormularioRegistro() {
     const extraFields = document.getElementById("extra-fields");
     extraFields.innerHTML = ""; // Limpia campos anteriores
@@ -59,6 +66,60 @@ function mostrarFormularioRegistro() {
     ocultarSeccion("seleccion-rol");
     mostrarSeccion("form-register");
 }
+
+function showStudentDashboard(base, index) {
+    const user = base[index];
+    const dashboard = document.getElementById("dashboard");
+
+    dashboard.innerHTML = `
+        <h2>Bienvenidx, ${user.nombre} 👋</h2>
+        <p><strong>Notas:</strong></p>
+        <ul>
+            <li>Matemática: ${user.notas.matematica ?? "Sin nota"}</li>
+            <li>Lengua: ${user.notas.lengua ?? "Sin nota"}</li>
+            <li>Historia: ${user.notas.historia ?? "Sin nota"}</li>
+        </ul>
+
+        <p><strong>Tareas pendientes:</strong></p>
+        <ul>
+            ${user.tareasPendientes.length > 0
+            ? user.tareasPendientes.map(tarea => `<li>${tarea}</li>`).join("")
+            : "<li>No tenés tareas pendientes 🥳</li>"
+        }
+        </ul>
+
+        <button id="btn-cerrar-sesion">Cerrar sesión</button>
+
+    `;
+
+    ocultarSeccion("formulario-contenedor");
+    mostrarSeccion("dashboard");
+}
+
+function showTeacherDashboard(base, index) {
+    const user = base[index];
+    const dashboard = document.getElementById("dashboard");
+
+    dashboard.innerHTML = `
+        <h2>Hola profe ${user.nombre} 👨‍🏫</h2>
+        <p>Materia: <strong>${user.materia}</strong></p>
+
+        <p><strong>Mensajes recibidos:</strong></p>
+        <ul>
+            ${user.mensajes.length > 0
+            ? user.mensajes.map(msg => `<li>${msg}</li>`).join("")
+            : "<li>No tiene mensajes nuevos 📬</li>"
+        }
+        </ul>
+
+        <button id="btn-cerrar-sesion">Cerrar sesión</button>
+
+    `;
+
+    ocultarSeccion("formulario-contenedor");
+    mostrarSeccion("dashboard");
+}
+
 
 document.getElementById("form-register").addEventListener("submit", (e) => {
     e.preventDefault();
@@ -267,7 +328,7 @@ document.getElementById("form-login").addEventListener("submit", (e) => {
         return;
     }
 
-    // Si todo está bien → guardar sesión
+    // Si ok -> guardar sesión
     localStorage.setItem("lastUser", JSON.stringify({
         mail: user.mail,
         nombre: user.nombre,
