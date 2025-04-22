@@ -45,7 +45,7 @@ const initialTeachers = [
     new Teacher({
         nombre: "Laura Fernández",
         mail: "laura.fernandez@escuela.edu.ar",
-        contraseña: "laura123",
+        contraseña: "Laura123",
         dni: "32145678",
         legajo: "P001",
         numeroEmpleado: "E001",

@@ -1,0 +1,155 @@
+/* Reset basico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #143e30;
+    color: #ffffef;
+    padding: 2rem;
+    line-height: 1.6;
+}
+
+/* Ti­tulo principal */
+#main-title {
+    font-family: 'TT Tricks', serif;
+    font-size: 2.5rem;
+    text-align: center;
+    font-weight: bold;
+    color: #ffffef;
+    margin-bottom: 2rem;
+}
+
+/* Secciones generales */
+section {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Botones */
+button {
+    background-color: #ffd177;
+    color: #143e30;
+    border: none;
+    padding: 0.7rem 1.4rem;
+    margin: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #f4b840;
+}
+
+/* Formularios */
+#formulario-contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+form {
+    background-color: #ffffff;
+    color: #143e30;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 90%;
+    margin-bottom: 1.5rem;
+}
+
+form h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+    text-align: left;
+}
+
+input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Mensajes de error */
+#login-error,
+#register-error {
+    color: red;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+/* Dashboard generico */
+#dashboard {
+    background-color: #ffffff;
+    color: #143e30;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 700px;
+    margin: 2rem auto;
+    text-align: left;
+}
+
+#dashboard h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+#dashboard ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Dashboard personalizado */
+.dashboard-alumnx {
+    background-color: #fff8e1;
+}
+
+.dashboard-docente {
+    background-color: #e1f3e6;
+}
+
+/* Mensaje post-registro */
+#registro-exitoso {
+    background-color: #ffffff;
+    color: #143e30;
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+#registro-exitoso p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    #main-title {
+        font-size: 2rem;
+    }
+
+    form {
+        padding: 1.5rem;
+    }
+
+    button {
+        width: 90%;
+        margin: 0.5rem auto;
+    }
+}

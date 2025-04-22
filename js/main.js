@@ -1,6 +1,9 @@
 // Variable para guardar el rol seleccionado
 let currentRole = null;
 
+// Variable para guardar el modo de acción
+let modoAccion = null;
+
 // Bases de datos activas (se recuperan del ls o se cargan desde data.js)
 let studentDataBase = JSON.parse(localStorage.getItem("studentDataBase")) || [...initialStudents];
 let teacherDataBase = JSON.parse(localStorage.getItem("teacherDataBase")) || [...initialTeachers];
@@ -39,6 +42,10 @@ function showStudentDashboard(base, index) {
     const user = base[index];
     const dashboard = document.getElementById("dashboard");
 
+    dashboard.innerHTML = "";
+    dashboard.className = "";
+    dashboard.classList.add("dashboard-alumnx");
+
     dashboard.innerHTML = `
         <h2>Bienvenidx, ${user.nombre} 👋</h2>
         <p><strong>Notas:</strong></p>
@@ -68,8 +75,12 @@ function showTeacherDashboard(base, index) {
     const user = base[index];
     const dashboard = document.getElementById("dashboard");
 
+    dashboard.innerHTML = "";
+    dashboard.className = "";
+    dashboard.classList.add("dashboard-docente");
+
     dashboard.innerHTML = `
-        <h2>Hola profe ${user.nombre} 👨‍🏫</h2>
+        <h2>Hola profe ${user.nombre} 👋 </h2>
         <p>Materia: <strong>${user.materia}</strong></p>
 
         <p><strong>Mensajes recibidos:</strong></p>
@@ -88,9 +99,19 @@ function showTeacherDashboard(base, index) {
     mostrarSeccion("dashboard");
 };
 
+function mostrarFormularioLogin() {
+    ocultarSeccion("form-register");
+    mostrarSeccion("formulario-contenedor");
+    mostrarSeccion("form-login");
+};
+
 function mostrarFormularioRegistro() {
+    ocultarSeccion("form-login");
+    mostrarSeccion("formulario-contenedor");
+    mostrarSeccion("form-register");
+
     const extraFields = document.getElementById("extra-fields");
-    extraFields.innerHTML = ""; // Limpia campos anteriores
+    extraFields.innerHTML = "";
 
     if (currentRole === ROLES.STUDENT) {
         extraFields.innerHTML += `
@@ -114,13 +135,10 @@ function mostrarFormularioRegistro() {
         <label for="register-materia">Materia:</label>
         <input type="text" id="register-materia" required>
       `;
-    }
-
-    ocultarSeccion("seleccion-rol");
-    mostrarSeccion("form-register");
+    };
 };
 
-// Al cargar la página
+// PRIMERO: Al cargar la página
 window.addEventListener("DOMContentLoaded", () => {
     const lastUser = JSON.parse(localStorage.getItem("lastUser"));
 
@@ -137,58 +155,66 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 });
 
-// Botón "Ingresar" desde página inicial (sin sesión previa)
-document.getElementById("btn-ingresar").addEventListener("click", () => {
-    ocultarSeccion("seleccion-inicial");
-    mostrarSeccion("seleccion-rol");
-});
-
+//REGISTRARSE
 // Botón "Registrarse" desde página inicial
 document.getElementById("btn-registrarse").addEventListener("click", () => {
+    modoAccion = "registro";
     ocultarSeccion("seleccion-inicial");
-    mostrarSeccion("seleccion-rol");
-});
-
-// Botón "Ingresar con usuario diferente"
-document.getElementById("btn-cambiar-usuario").addEventListener("click", () => {
-    localStorage.removeItem("lastUser"); // Eliminamos sesión guardada
-    ocultarSeccion("inicio-sesion");
     mostrarSeccion("seleccion-rol");
 });
 
 // Botón "Registrarse" desde sesión
 document.getElementById("btn-registrarse-desde-sesion").addEventListener("click", () => {
+    modoAccion = "registro";
     ocultarSeccion("inicio-sesion");
     mostrarSeccion("seleccion-rol");
 });
 
+//INGRESAR
+// Botón "Ingresar" desde página inicial (sin sesión previa)
+document.getElementById("btn-ingresar").addEventListener("click", () => {
+    modoAccion = "login";
+    ocultarSeccion("seleccion-inicial");
+    mostrarSeccion("seleccion-rol");
+});
+
+// Botón "Ingresar con usuarix diferente"
+document.getElementById("btn-cambiar-usuario").addEventListener("click", () => {
+    localStorage.removeItem("lastUser");
+    modoAccion = "login";
+    ocultarSeccion("inicio-sesion");
+    mostrarSeccion("seleccion-rol");
+});
+
+//Click en btn alumnx
 document.getElementById("btn-alumnx").addEventListener("click", () => {
     currentRole = ROLES.STUDENT;
     ocultarSeccion("seleccion-rol");
-    mostrarSeccion("formulario-contenedor");
-    mostrarSeccion("form-login");
+
+    if (modoAccion === "login") {
+        mostrarFormularioLogin();
+    } else {
+        mostrarFormularioRegistro();
+    }
 });
 
+//Click en btn profe
 document.getElementById("btn-profe").addEventListener("click", () => {
     currentRole = ROLES.TEACHER;
     ocultarSeccion("seleccion-rol");
-    mostrarSeccion("formulario-contenedor");
-    mostrarSeccion("form-login");
-});
 
-// Si usuarix quiere registrarse desde inicio o desde sesión
-document.getElementById("btn-registrarse").addEventListener("click", () => {
-    mostrarFormularioRegistro();
-});
-
-document.getElementById("btn-registrarse-desde-sesion").addEventListener("click", () => {
-    mostrarFormularioRegistro();
+    if (modoAccion === "login") {
+        mostrarFormularioLogin();
+    } else {
+        mostrarFormularioRegistro();
+    };
 });
 
 //Inicio desde sesión activa 
 document.getElementById("btn-ingresar-sesion").addEventListener("click", () => {
     const lastUser = JSON.parse(localStorage.getItem("lastUser"));
-    const inputPassword = document.getElementById("input-password").value;
+    const inputPassword = document.getElementById("input-password");
+    const password = inputPassword.value;
     let base = null;
 
     // Determinar base datos según el rol
@@ -201,7 +227,7 @@ document.getElementById("btn-ingresar-sesion").addEventListener("click", () => {
     // Buscar usuarix en la base según mail
     const userIndex = base.findIndex(user => user.mail === lastUser.mail);
 
-    if (userIndex !== -1 && base[userIndex].contraseña === inputPassword) {
+    if (userIndex !== -1 && base[userIndex].contraseña === password) {
         // Contraseña válida → mostrar dashboard
         if (lastUser.rol === ROLES.STUDENT) {
             showStudentDashboard(base, userIndex);
@@ -210,7 +236,10 @@ document.getElementById("btn-ingresar-sesion").addEventListener("click", () => {
         }
     } else {
         alert("La contraseña no coincide. Intentá nuevamente.");
-    }
+    };
+
+    inputPassword.value = "";
+
 });
 
 //Login normal (Sin sesion activa)
@@ -341,16 +370,24 @@ document.getElementById("form-register").addEventListener("submit", (e) => {
         rol: currentRole
     }));
 
-    // Ocultar formulario registro y mostrar dashboard
+    // Ocultar formulario y Mostrar mensaje de registro exitoso
     ocultarSeccion("form-register");
+    mostrarSeccion("registro-exitoso");
 
-    if (currentRole === ROLES.STUDENT) {
-        showStudentDashboard(base, index);
-    } else {
-        showTeacherDashboard(base, index);
-    };
 });
 
+// Ir al login desde el registro 
+document.getElementById("btn-ir-a-login").addEventListener("click", () => {
+    ocultarSeccion("registro-exitoso");
+    mostrarSeccion("inicio-sesion");
+});
+
+// Ir al inicio 
+document.getElementById("btn-volver-inicio").addEventListener("click", () => {
+    localStorage.removeItem("lastUser");
+    ocultarSeccion("registro-exitoso");
+    mostrarSeccion("seleccion-inicial");
+});
 
 document.addEventListener("click", (e) => {
     if (e.target && e.target.id === "btn-cerrar-sesion") {
