@@ -4,7 +4,7 @@ const initialStudents = [
     new Student({
         nombre: "Sol Martínez",
         mail: "sol.martinez@mail.com",
-        contraseña: "sol1234",
+        contraseña: "Sol1234",
         dni: "40123456",
         legajo: "A001",
         notas: {
@@ -18,7 +18,7 @@ const initialStudents = [
     new Student({
         nombre: "Bruno López",
         mail: "bruno.lopez@mail.com",
-        contraseña: "bruno2024",
+        contraseña: "Bruno2024",
         dni: "40991234",
         legajo: "A004",
         notas: {

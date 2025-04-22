@@ -1,43 +1,4 @@
 
-// Declaración de variables globales
-// Definición de roles
-const ROLES = {
-    STUDENT: "STUDENT",
-    TEACHER: "TEACHER"
-};
-
-// Clase base: User
-class User {
-    constructor(data) {
-        this.nombre = data.nombre;
-        this.mail = data.mail;
-        this.contraseña = data.contraseña;
-        this.dni = data.dni;
-        this.legajo = data.legajo;
-        this.mensajes = data.mensajes || [];
-    };
-};
-
-// Clase Student que hereda de User
-class Student extends User {
-    constructor(data) {
-        super(data);
-        this.rol = ROLES.STUDENT;
-        this.notas = data.notas || {};
-        this.tareasPendientes = data.tareasPendientes || [];
-    };
-};
-
-// Clase Teacher que hereda de User
-class Teacher extends User {
-    constructor(data) {
-        super(data);
-        this.rol = ROLES.TEACHER;
-        this.numeroEmpleado = data.numeroEmpleado;
-        this.materia = data.materia;
-    };
-};
-
 // Bases de datos activas (se recuperan del ls o se cargan desde data.js)
 let studentDataBase = JSON.parse(localStorage.getItem("studentDataBase")) || [...initialStudents];
 let teacherDataBase = JSON.parse(localStorage.getItem("teacherDataBase")) || [...initialTeachers];
@@ -66,6 +27,7 @@ function validateInput(value, type) {
             return true;
     }
 };
+
 function mostrarFormularioRegistro() {
     const extraFields = document.getElementById("extra-fields");
     extraFields.innerHTML = ""; // Limpia campos anteriores
@@ -267,12 +229,14 @@ document.getElementById("btn-registrarse").addEventListener("click", () => {
 document.getElementById("btn-alumnx").addEventListener("click", () => {
     currentRole = ROLES.STUDENT;
     ocultarSeccion("seleccion-rol");
+    mostrarSeccion("formulario-contenedor");
     mostrarSeccion("form-login");
 });
 
 document.getElementById("btn-profe").addEventListener("click", () => {
     currentRole = ROLES.TEACHER;
     ocultarSeccion("seleccion-rol");
+    mostrarSeccion("formulario-contenedor");
     mostrarSeccion("form-login");
 });
 
@@ -282,46 +246,43 @@ document.getElementById("form-login").addEventListener("submit", (e) => {
 
     const mail = document.getElementById("login-mail").value.trim();
     const password = document.getElementById("login-password").value;
-
-    // Validaciones con regex
     const errorMsg = document.getElementById("login-error");
 
-    if (!validateInput(mail, "email")) {
-        errorMsg.textContent = "El mail ingresado no es válido.";
-        return;
-    }
+    // 🔁 Ya no usamos regex acá
 
-    if (!validateInput(password, "password")) {
-        errorMsg.textContent = "La contraseña debe tener al menos 6 caracteres, una mayúscula y un número.";
-        return;
-    }
-
-    // Buscar en la base correspondiente
+    // Buscar usuario en la base correspondiente
     let base = currentRole === ROLES.STUDENT ? studentDataBase : teacherDataBase;
 
     const userIndex = base.findIndex(user => user.mail === mail);
 
-    if (userIndex !== -1 && base[userIndex].contraseña === password) {
-        // Guardar sesión
-        localStorage.setItem("lastUser", JSON.stringify({
-            mail: base[userIndex].mail,
-            nombre: base[userIndex].nombre,
-            rol: base[userIndex].rol
-        }));
+    if (userIndex === -1) {
+        errorMsg.textContent = "No existe ninguna cuenta registrada con ese mail.";
+        return;
+    }
 
-        // Mostrar dashboard
-        ocultarSeccion("form-login");
+    const user = base[userIndex];
 
-        if (currentRole === ROLES.STUDENT) {
-            showStudentDashboard(base, userIndex);
-        } else {
-            showTeacherDashboard(base, userIndex);
-        }
+    if (user.contraseña !== password) {
+        errorMsg.textContent = "La contraseña no es correcta.";
+        return;
+    }
 
+    // Si todo está bien → guardar sesión
+    localStorage.setItem("lastUser", JSON.stringify({
+        mail: user.mail,
+        nombre: user.nombre,
+        rol: user.rol
+    }));
+
+    ocultarSeccion("form-login");
+
+    if (currentRole === ROLES.STUDENT) {
+        showStudentDashboard(base, userIndex);
     } else {
-        document.getElementById("login-error").textContent = "La contraseña no coincide.";
+        showTeacherDashboard(base, userIndex);
     }
 });
+
 
 // Conecto los botones de registro con esta función
 document.getElementById("btn-registrarse").addEventListener("click", () => {
