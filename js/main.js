@@ -97,6 +97,101 @@ function mostrarFormularioRegistro() {
     mostrarSeccion("form-register");
 }
 
+document.getElementById("form-register").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const nombre = document.getElementById("register-nombre").value.trim();
+    const mail = document.getElementById("register-mail").value.trim();
+    const password = document.getElementById("register-password").value;
+    const dni = document.getElementById("register-dni").value.trim();
+    const legajo = document.getElementById("register-legajo").value.trim();
+    const errorMsg = document.getElementById("register-error");
+
+    let base = currentRole === ROLES.STUDENT ? studentDataBase : teacherDataBase;
+
+    // Validar mail y contraseña con regex
+    if (!validateInput(mail, "email")) {
+        errorMsg.textContent = "El mail ingresado no es válido.";
+        return;
+    }
+
+    if (!validateInput(password, "password")) {
+        errorMsg.textContent = "La contraseña debe tener al menos 6 caracteres, una mayúscula y un número.";
+        return;
+    }
+
+    // Verificar si ya existe ese mail
+    if (base.some(user => user.mail === mail)) {
+        errorMsg.textContent = "Ese mail ya está registrado.";
+        return;
+    }
+
+    // Verificar si legajo está precargado
+    const index = base.findIndex(user => user.legajo === legajo && user.dni === dni);
+    if (index === -1) {
+        errorMsg.textContent = "No estás cargadx en la base institucional. Contactá a la escuela.";
+        return;
+    }
+
+    // Si es docente, validamos número de empleadx también
+    if (currentRole === ROLES.TEACHER) {
+        const numeroEmpleado = document.getElementById("register-numeroEmpleado").value.trim();
+        const materia = document.getElementById("register-materia").value.trim();
+
+        if (base[index].numeroEmpleado !== numeroEmpleado) {
+            errorMsg.textContent = "Los datos no coinciden. Contactá a la escuela.";
+            return;
+        }
+
+        // Registro exitoso
+        base[index] = new Teacher({
+            nombre,
+            mail,
+            contraseña: password,
+            dni,
+            legajo,
+            numeroEmpleado,
+            materia,
+            mensajes: []
+        });
+
+    } else {
+        // Registro exitoso (alumnx)
+        base[index] = new Student({
+            nombre,
+            mail,
+            contraseña: password,
+            dni,
+            legajo,
+            tareasPendientes: [],
+            notas: {},
+            mensajes: []
+        });
+    }
+
+    // Guardar base actualizada en localStorage
+    if (currentRole === ROLES.STUDENT) {
+        localStorage.setItem("studentDataBase", JSON.stringify(studentDataBase));
+    } else {
+        localStorage.setItem("teacherDataBase", JSON.stringify(teacherDataBase));
+    }
+
+
+    // Guardar sesión activa
+    localStorage.setItem("lastUser", JSON.stringify({
+        mail: mail,
+        nombre: nombre,
+        rol: currentRole
+    }));
+
+    // Mostrar dashboard
+    ocultarSeccion("form-register");
+    if (currentRole === ROLES.STUDENT) {
+        showStudentDashboard(base, index);
+    } else {
+        showTeacherDashboard(base, index);
+    }
+});
 
 
 // Al cargar la página
