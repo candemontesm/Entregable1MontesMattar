@@ -10,7 +10,7 @@ El simulador está inspirado en plataformas como el aula virtual o SIU Guaraní,
 
 La lógica permite validar si una persona está cargada en la base de datos institucional, para luego habilitar el registro de su cuenta. Una vez ingresada, accede a un dashboard con opciones específicas: los y las estudiantes pueden ver sus notas y tareas pendientes, mientras que el cuerpo docente puede leer mensajes recibidos y publicar avisos.
 
-Todo el flujo del programa se ejecuta mediante interacciones en consola (prompt, alert, confirm), sin requerir diseño visual en esta etapa.
+En esta segunda entrega, se integró JavaScript con HTML y se agregó interactividad mediante el DOM, reemplazando los cuadros de diálogo por formularios visuales y botones.
 
 ---
 
@@ -20,35 +20,39 @@ Todo el flujo del programa se ejecuta mediante interacciones en consola (prompt,
 - Ingreso mediante mail y contraseña.
 - Visualización de notas por materia.
 - Consulta de tareas pendientes.
+- Sesión recordada mediante localStorage.
 
 ---
 
 ## 👩‍🏫 Funcionalidades para docentes
 
-- Registro con nombre, mail, contraseña y materia
-(validados previamente con número de empleadx y legajo).
-- Ingreso mediante número de empleadx y contraseña.
+- Registro con nombre, mail, contraseña y materia (validados con número de empleadx y legajo).
+- Ingreso mediante mail y contraseña.
 - Visualización de mensajes recibidos.
-- Posibilidad de redactar un aviso para estudiantes.
+- Publicación de avisos para estudiantes.
+- Sesión recordada mediante localStorage.
 
 ---
 
 ## 🛠️ Herramientas utilizadas
 
 - JavaScript (vanilla)
-- Arrays de objetos como base de datos simulada
-- Funciones reutilizables
-- Condicionales, bucles, validaciones
-- Interacción mediante `prompt()`, `confirm()` y `alert()`
+- HTML5 + DOM API
+- localStorage para persistencia de sesión y base de datos
+- Regex para validación de mail y contraseña
+- Clases, herencia, y estructura modular del código
+- Funciones reutilizables, condicionales, bucles, eventos
 
 ---
 
 ## 🗂️ Estructura del proyecto
 
-📁 SIMULADOR/
-├── 📁 js/
-│   └── main.js
-├── 📄 index.html
-├── 📄 readme.md
-
-
+📁 SIMULADOR/ 
+├── 📁 js/ 
+│ ├── clases.js 
+│ ├── data.js 
+│ └── main.js 
+├── 📁 css/ 
+│ └── style.css 
+├── 📄 index.html 
+└── 📄 readme.md
