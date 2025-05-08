@@ -1,0 +1,20 @@
+[
+    {
+        "id": 5001,
+        "fromId": 101,
+        "toId": 1,
+        "subject": "Entrega de la guía",
+        "body": "Recordá subir el archivo antes del viernes, ¡gracias!",
+        "timestamp": "2025-05-06T10:15:00Z",
+        "read": false
+    },
+    {
+        "id": 5002,
+        "fromId": 2,
+        "toId": 101,
+        "subject": "Re: Entrega de la guía",
+        "body": "¡Profe, gracias! Ya la estoy terminando.",
+        "timestamp": "2025-05-06T13:20:00Z",
+        "read": false
+    }
+]

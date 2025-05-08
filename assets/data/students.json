@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "firstName": "Juan",
+        "lastName": "Pérez",
+        "dni": "12345678",
+        "legajo": "A001",
+        "course": "3°A",
+        "email": "juan.perez@cpem30.edu.ar",
+        "password": "Clave123"
+    },
+    {
+        "id": 2,
+        "firstName": "Lucía",
+        "lastName": "Acosta",
+        "dni": "22334455",
+        "legajo": "A002",
+        "course": "3°A",
+        "email": "lucia.acosta@cpem30.edu.ar",
+        "password": "Clave123"
+    }
+]

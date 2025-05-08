@@ -1,0 +1,22 @@
+[
+    {
+        "id": 3001,
+        "title": "Guía de funciones cuadráticas",
+        "description": "Resolver ejercicios 1‑10 del PDF.",
+        "subject": "Matemática",
+        "studentId": 1,
+        "teacherId": 101,
+        "dueDate": "2025-05-20",
+        "done": false
+    },
+    {
+        "id": 3002,
+        "title": "Comentario de texto narrativo",
+        "description": "Entregar análisis de la página 45.",
+        "subject": "Lengua",
+        "studentId": 2,
+        "teacherId": 102,
+        "dueDate": "2025-05-22",
+        "done": false
+    }
+]

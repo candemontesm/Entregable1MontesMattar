@@ -1,0 +1,16 @@
+[
+    {
+        "id": 4001,
+        "studentId": 1,
+        "subject": "Matemática",
+        "grade": 8,
+        "date": "2025-05-03"
+    },
+    {
+        "id": 4002,
+        "studentId": 2,
+        "subject": "Lengua",
+        "grade": 9,
+        "date": "2025-05-04"
+    }
+]

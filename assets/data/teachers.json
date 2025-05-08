@@ -1,0 +1,23 @@
+[
+    {
+        "id": 101,
+        "firstName": "María",
+        "lastName": "Gómez",
+        "dni": "87654321",
+        "legajo": "P001",
+        "subject": "Matemática",
+        "email": "maria.gomez@cpem30.edu.ar",
+        "password": "Profe123"
+    },
+    {
+        "id": 102,
+        "firstName": "Sergio",
+        "lastName": "Navarro",
+        "dni": "99887766",
+        "legajo": "P002",
+        "subject": "Lengua y Literatura",
+        "email": "sergio.navarro@cpem30.edu.ar",
+        "password": "Profe123"
+    }
+]
++  
