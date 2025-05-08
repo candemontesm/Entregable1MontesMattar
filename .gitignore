@@ -1,0 +1,7 @@
+# macOS / VS Code
+.DS_Store
+.vscode/
+
+# Dependencias o builds (por si más adelante los usas)
+node_modules/
+dist/
