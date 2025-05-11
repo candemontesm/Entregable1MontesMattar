@@ -1,5 +1,6 @@
 import { initDatabase, dbGet, dbSet } from "../services/database.js";
 import { ROLES } from "../models/ROLES.js";
+import { openRegisterModal } from "../ui/register.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   // 1) cargar BD (JSON -> LS)
@@ -13,8 +14,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const studentDash = document.getElementById("student-dashboard");
   const teacherDash = document.getElementById("teacher-dashboard");
   const loginContainer = document.getElementById("login-container");
+  const btnShowRegister = document.getElementById("btn-show-register");
 
-  // 3) handler login
+  // handler registro
+  btnShowRegister.addEventListener("click", () => openRegisterModal(db));
+
+  // 4) handler login
   btnLogin.addEventListener("click", () => {
     const email = inputEmail.value.trim().toLowerCase();
     const pass = inputPass.value.trim();
