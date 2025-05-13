@@ -50,7 +50,9 @@ export function renderStudentDash(container, student, db) {
   };
 
   container.querySelector("#btn-grades").onclick = () => {
-    const grades = db.grades.filter((g) => g.studentId === student.id);
+    const grades = db.grades
+      .filter((g) => g.studentId === student.id)
+      .sort((a, b) => b.date.localeCompare(a.date));
     content.innerHTML = grades.length
       ? `<table class="table is-fullwidth">
           <thead><tr><th>Materia</th><th>Nota</th><th>Fecha</th></tr></thead>

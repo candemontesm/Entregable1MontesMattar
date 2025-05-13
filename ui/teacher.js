@@ -48,5 +48,38 @@ export function renderTeacherDash(container, teacher, db) {
     Toastify({ text: "Tarea creada", duration: 2000 }).showToast();
   };
 
-  // (botones #btn-grade y #btn-msgs los completaremos en la siguiente iteración)
+  // ——— NUEVA NOTA ———
+  container.querySelector("#btn-grade").onclick = async () => {
+    const { value: form } = await Swal.fire({
+      title: "Cargar nota",
+      html: `
+      <input id="sw-student-note" class="swal2-input" placeholder="ID estudiante">
+      <input id="sw-grade"       class="swal2-input" type="number" min="1" max="10" placeholder="Nota (1‑10)">
+      <input id="sw-date"        class="swal2-input" type="date" value="${new Date()
+        .toISOString()
+        .slice(0, 10)}">
+    `,
+      focusConfirm: false,
+      preConfirm: () => ({
+        studentId: +document.getElementById("sw-student-note").value,
+        grade: +document.getElementById("sw-grade").value,
+        date: document.getElementById("sw-date").value,
+      }),
+    });
+
+    if (!form) return;
+
+    if (form.grade < 1 || form.grade > 10) {
+      Swal.fire("Error", "La nota debe ser de 1 a 10", "error");
+      return;
+    }
+
+    db.grades.push({
+      id: Date.now(),
+      ...form,
+      subject: teacher.subject,
+    });
+    dbSet(db);
+    Toastify({ text: "Nota cargada", duration: 2000 }).showToast();
+  };
 }
