@@ -1,3 +1,4 @@
+/* global Swal, Toastify */
 import { dbSet } from "../services/database.js";
 
 export function renderTeacherDash(container, teacher, db) {
@@ -14,7 +15,7 @@ export function renderTeacherDash(container, teacher, db) {
     <div id="teacher-content" class="mt-4"></div>
   `;
 
-  // ——— NUEVA TAREA ———
+  // NUEVA TAREA
   container.querySelector("#btn-task").onclick = async () => {
     const { value: form } = await Swal.fire({
       title: "Nueva tarea",
@@ -48,7 +49,7 @@ export function renderTeacherDash(container, teacher, db) {
     Toastify({ text: "Tarea creada", duration: 2000 }).showToast();
   };
 
-  // ——— NUEVA NOTA ———
+  // NUEVA NOTA
   container.querySelector("#btn-grade").onclick = async () => {
     const { value: form } = await Swal.fire({
       title: "Cargar nota",
@@ -81,5 +82,62 @@ export function renderTeacherDash(container, teacher, db) {
     });
     dbSet(db);
     Toastify({ text: "Nota cargada", duration: 2000 }).showToast();
+  };
+
+  //  VER / ENVIAR MENSAJES
+  container.querySelector("#btn-msgs").onclick = () => {
+    const msgs = db.messages.filter(
+      (m) => m.toId === teacher.id || m.fromId === teacher.id
+    );
+    const content = container.querySelector("#teacher-content");
+    content.innerHTML = `
+    <h3 class="subtitle is-5">Mensajes</h3>
+    <button id="btn-new-msg" class="button is-small is-link mb-3">Nuevo mensaje</button>
+    ${
+      msgs.length
+        ? msgs
+            .map(
+              (m) => `
+          <article class="message is-light mb-2">
+            <div class="message-header">
+              <p>${m.subject}</p>
+              <small>${new Date(m.timestamp).toLocaleString()}</small>
+            </div>
+            <div class="message-body">${m.body}</div>
+          </article>`
+            )
+            .join("")
+        : "<p>No tienes mensajes.</p>"
+    }
+  `;
+
+    // enviar nuevo mensaje
+    content.querySelector("#btn-new-msg").onclick = async () => {
+      const { value: form } = await Swal.fire({
+        title: "Nuevo mensaje",
+        html: `
+        <input id="sw-to"  class="swal2-input" placeholder="ID destinatario">
+        <input id="sw-subj" class="swal2-input" placeholder="Asunto">
+        <textarea id="sw-body" class="swal2-textarea" placeholder="Mensaje"></textarea>
+      `,
+        focusConfirm: false,
+        preConfirm: () => ({
+          toId: +document.getElementById("sw-to").value,
+          subject: document.getElementById("sw-subj").value,
+          body: document.getElementById("sw-body").value,
+        }),
+      });
+      if (!form) return;
+
+      db.messages.push({
+        id: Date.now(),
+        fromId: teacher.id,
+        timestamp: new Date().toISOString(),
+        read: false,
+        ...form,
+      });
+      dbSet(db);
+      Toastify({ text: "Mensaje enviado", duration: 2000 }).showToast();
+    };
   };
 }

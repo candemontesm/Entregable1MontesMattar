@@ -1,3 +1,4 @@
+/* global Swal, Toastify */
 import { dbSet } from "../services/database.js";
 
 export function renderStudentDash(container, student, db) {
@@ -14,7 +15,6 @@ export function renderStudentDash(container, student, db) {
     <div id="student-content" class="mt-4"></div>
   `;
 
-  // ——— LISTENERS ———
   const content = container.querySelector("#student-content");
 
   container.querySelector("#btn-tasks").onclick = () => {
@@ -49,42 +49,64 @@ export function renderStudentDash(container, student, db) {
     });
   };
 
-  container.querySelector("#btn-grades").onclick = () => {
-    const grades = db.grades
-      .filter((g) => g.studentId === student.id)
-      .sort((a, b) => b.date.localeCompare(a.date));
-    content.innerHTML = grades.length
-      ? `<table class="table is-fullwidth">
-          <thead><tr><th>Materia</th><th>Nota</th><th>Fecha</th></tr></thead>
-          <tbody>
-            ${grades
-              .map(
-                (g) =>
-                  `<tr><td>${g.subject}</td><td>${g.grade}</td><td>${g.date}</td></tr>`
-              )
-              .join("")}
-          </tbody>
-        </table>`
-      : "<p>Aún no hay notas registradas.</p>";
-  };
-
   container.querySelector("#btn-msg").onclick = () => {
     const msgs = db.messages.filter(
       (m) => m.toId === student.id || m.fromId === student.id
     );
-    content.innerHTML = msgs.length
-      ? msgs
-          .map(
-            (m) => `
-        <article class="message is-link-light mb-3">
-          <div class="message-header">
-            <p>${m.subject}</p>
-            <small>${new Date(m.timestamp).toLocaleString()}</small>
-          </div>
-          <div class="message-body">${m.body}</div>
-        </article>`
-          )
-          .join("")
-      : "<p>No tienes mensajes.</p>";
+
+    content.innerHTML = `
+      <h3 class="subtitle is-5">Mensajes</h3>
+      ${
+        msgs.length
+          ? msgs
+              .map(
+                (m) => `
+          <article class="message is-link-light mb-3">
+            <div class="message-header">
+              <p>${m.subject}</p>
+              <small>${new Date(m.timestamp).toLocaleString()}</small>
+            </div>
+            <div class="message-body">
+              ${m.body}
+              <!-- Botón de respuesta solo si el mensaje vino de otra persona -->
+              ${
+                m.fromId !== student.id
+                  ? `<button class="button is-small is-light mt-2" data-reply="${m.fromId}">
+                       Responder
+                     </button>`
+                  : ""
+              }
+            </div>
+          </article>`
+              )
+              .join("")
+          : "<p>No tienes mensajes.</p>"
+      }
+    `;
+
+    // responder
+    content.querySelectorAll("[data-reply]").forEach((btn) => {
+      btn.onclick = async () => {
+        const toId = +btn.dataset.reply;
+        const { value: body } = await Swal.fire({
+          title: "Responder mensaje",
+          input: "textarea",
+          inputPlaceholder: "Escribe tu respuesta…",
+        });
+        if (!body) return;
+
+        db.messages.push({
+          id: Date.now(),
+          fromId: student.id,
+          toId,
+          subject: "Re:",
+          body,
+          timestamp: new Date().toISOString(),
+          read: false,
+        });
+        dbSet(db);
+        Toastify({ text: "Respuesta enviada", duration: 2000 }).showToast();
+      };
+    });
   };
 }

@@ -1,3 +1,4 @@
+/* global Swal, Toastify */
 import { initDatabase, dbGet, dbSet } from "../services/database.js";
 import { ROLES } from "../models/ROLES.js";
 import { openRegisterModal } from "../ui/register.js";
@@ -6,7 +7,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 1) cargar BD (JSON -> LS)
   const db = await initDatabase();
 
-  // 2) referenciar elementos
   const inputEmail = document.getElementById("login-email");
   const inputPass = document.getElementById("login-pass");
   const btnLogin = document.getElementById("btn-login");
@@ -16,10 +16,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loginContainer = document.getElementById("login-container");
   const btnShowRegister = document.getElementById("btn-show-register");
 
-  // handler registro
   btnShowRegister.addEventListener("click", () => openRegisterModal(db));
 
-  // 4) handler login
   btnLogin.addEventListener("click", () => {
     const email = inputEmail.value.trim().toLowerCase();
     const pass = inputPass.value.trim();
@@ -33,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // persistimos sesión
+    // guardo sesión LS
     localStorage.setItem(
       "currentUser",
       JSON.stringify({
@@ -42,14 +40,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       })
     );
 
-    // lanzamos dashboard
+    // muestro dashboard
     loginContainer.classList.add("is-hidden");
     if (user.course) renderStudentDash(studentDash, user, db);
     else renderTeacherDash(teacherDash, user, db);
   });
 });
-
-// 4) renderizadores provisionales
 
 import { renderStudentDash } from "../ui/student.js";
 import { renderTeacherDash } from "../ui/teacher.js";

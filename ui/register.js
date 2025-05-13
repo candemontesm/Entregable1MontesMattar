@@ -17,7 +17,7 @@ export async function openRegisterModal(db) {
   });
   if (!role) return;
 
-  // -------- Formulario dinámico --------
+  // Formulario dinámico
   const htmlForm = `
     <input id="reg-name" class="swal2-input" placeholder="Nombre y Apellido">
     <input id="reg-email" class="swal2-input" type="email" placeholder="e‑mail">
@@ -51,7 +51,7 @@ export async function openRegisterModal(db) {
 
   if (!form) return;
 
-  // -------- Validaciones --------
+  // Validaciones
   if (form.password.length < 6) {
     Swal.fire(
       "Error",
@@ -68,10 +68,7 @@ export async function openRegisterModal(db) {
     return;
   }
 
-  // (Opcional) validar legajo existente según rol
-  // const legajoOk = ...  / Si quieres, revisamos luego este paso
-
-  // -------- Crear instancia y guardar --------
+  // Crear instancia y guardar
   const newUserBase = {
     id: Date.now(),
     ...form,
@@ -87,7 +84,7 @@ export async function openRegisterModal(db) {
 
   Toastify({ text: "¡Registro exitoso!", duration: 2000 }).showToast();
 
-  // -------- Auto‑login --------
+  //  Auto-login
   localStorage.setItem(
     "currentUser",
     JSON.stringify({ id: newUserBase.id, role })
