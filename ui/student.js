@@ -1,6 +1,7 @@
 /* global Swal, Toastify */
 
 import { dbSet } from "../services/database.js";
+import { toast } from "../services/notify.js";
 
 const getUserName = (id, db) => {
   const u =
@@ -12,12 +13,25 @@ const getUserName = (id, db) => {
 export function renderStudentDash(container, student, db) {
   container.classList.remove("is-hidden");
   container.innerHTML = `
-    <h2 class="title is-4">Hola, ${student.firstName}</h2>
+    <div class="dashboard-header">
+    <h2 class="title is-4 mb-0"> Hola,  ${student.firstName}</h2>
 
-    <div class="buttons">
-      <button id="btn-tasks"  class="button is-link">Actividades</button>
-      <button id="btn-grades" class="button is-info">Notas</button>
-      <button id="btn-msg"    class="button is-warning">Mensajes</button>
+    <div class="buttons mb-5">
+      <button id="btn-tasks"  class="button is-link">
+        <i class="fa-solid fa-list-check fa-fw"></i>
+        Actividades
+     </button>
+
+      <button id="btn-grades" class="button is-info">
+       <i class="fa-solid fa-chart-column fa-fw"></i>
+        Notas
+      </button>
+
+      <button id="btn-msg"    class="button is-warning">
+        <i class="fa-solid fa-envelope fa-fw"></i>
+        Mensajes
+     </button>
+
     </div>
 
     <div id="student-content" class="mt-4"></div>
@@ -55,7 +69,7 @@ export function renderStudentDash(container, student, db) {
         const task = db.tasks.find((t) => t.id === id);
         task.done = true;
         dbSet(db);
-        Toastify({ text: "¡Tarea completada!", duration: 2000 }).showToast();
+        toast("¡Tarea completada!", "success");
         btn.closest("article").remove();
       };
     });
@@ -170,7 +184,7 @@ export function renderStudentDash(container, student, db) {
           read: false,
         });
         dbSet(db);
-        Toastify({ text: "Respuesta enviada", duration: 2000 }).showToast();
+        toast("Respuesta enviada", "success");
       });
     });
   };

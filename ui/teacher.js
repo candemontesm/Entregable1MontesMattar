@@ -7,16 +7,28 @@ const getUserName = (id, db) => {
 };
 
 import { dbSet } from "../services/database.js";
+import { toast } from "../services/notify.js";
 
 export function renderTeacherDash(container, teacher, db) {
   container.classList.remove("is-hidden");
   container.innerHTML = `
-    <h2 class="title is-4"> ¡Hola, Profe ${teacher.lastName}!</h2>
+    <div class="dashboard-header">
+    <h2 class="title is-4 mb-0">Hola,  Profe ${teacher.lastName}!</h2>
 
-    <div class="buttons">
-      <button id="btn-msgs"   class="button is-warning">Mensajes</button>
-      <button id="btn-task"   class="button is-success">Nueva tarea</button>
-      <button id="btn-grade"  class="button is-link">Nueva nota</button>
+    <div class="buttons mb-5">
+      <button id="btn-msgs"   class="button is-warning">
+        <i class="fa-solid fa-envelope fa-fw"></i>
+        Mensajes
+      </button>
+      <button id="btn-task"   class="button is-success">
+        <i class="fa-solid fa-clipboard-list fa-fw"></i>
+        Nueva tarea
+      </button>
+
+      <button id="btn-grade"  class="button is-link">
+        <i class="fa-solid fa-pen-to-square fa-fw"></i>
+        Nueva nota
+      </button>
     </div>
 
     <div id="teacher-content" class="mt-4"></div>
@@ -64,10 +76,7 @@ export function renderTeacherDash(container, teacher, db) {
     );
 
     dbSet(db);
-    Toastify({
-      text: `Tarea enviada a ${recipients.length} alumnxs`,
-      duration: 2500,
-    }).showToast();
+    toast(`Tarea enviada a ${recipients.length} alumnxs`, "success");
   };
 
   // NUEVA NOTA
@@ -115,7 +124,7 @@ export function renderTeacherDash(container, teacher, db) {
       ...form,
     });
     dbSet(db);
-    Toastify({ text: "Nota cargada", duration: 2000 }).showToast();
+    toast("Nota cargada", "success");
   };
 
   //  VER / ENVIAR MENSAJES
@@ -210,7 +219,7 @@ export function renderTeacherDash(container, teacher, db) {
         ...form,
       });
       dbSet(db);
-      Toastify({ text: "Mensaje enviado", duration: 2000 }).showToast();
+      toast("Mensaje enviado", "success");
     };
   };
 }

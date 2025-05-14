@@ -3,6 +3,7 @@ import Student from "../models/Student.js";
 import Teacher from "../models/Teacher.js";
 import { ROLES } from "../models/ROLES.js";
 import { dbSet } from "../services/database.js";
+import { toast } from "../services/notify.js";
 
 export async function openRegisterModal(db) {
   const { value: role } = await Swal.fire({
@@ -82,7 +83,7 @@ export async function openRegisterModal(db) {
 
   dbSet(db);
 
-  Toastify({ text: "¡Registro exitoso!", duration: 2000 }).showToast();
+  toast("¡Registro exitoso!", "success");
 
   //  Auto-login
   localStorage.setItem(
