@@ -1,3 +1,4 @@
+/* global Toastify */
 export const toast = (text, type = "info") => {
   const colors = {
     info: "var(--primary)",
@@ -7,6 +8,8 @@ export const toast = (text, type = "info") => {
   Toastify({
     text,
     duration: 2500,
+    gravity: "top",
+    //position: "center",
     style: {
       background: colors[type],
       color: type === "info" ? "#000" : "#fff",

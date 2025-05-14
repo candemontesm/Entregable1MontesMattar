@@ -6,6 +6,23 @@
     <title>Aula virtual CPEM 30</title>
 
     <link rel="stylesheet" href="./css/style.css" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="css/custom.css" />
   </head>
 
   <body>
@@ -17,10 +34,11 @@
     </section>
 
     <!-- LOGIN -->
-    <section class="section" id="login-container">
-      <div class="container" style="max-width: 420px">
-        <h2 class="title is-4 has-text-centered">Iniciar sesión</h2>
+    <section class="section">
+      <div id="login-container">
+        <h2 class="title is-3 has-text-centered mb-4">Iniciar sesión</h2>
 
+        <!-- Email -->
         <div class="field">
           <label class="label" for="login-email">Email</label>
           <div class="control">
@@ -34,6 +52,7 @@
           </div>
         </div>
 
+        <!-- Contraseña -->
         <div class="field">
           <label class="label" for="login-pass">Contraseña</label>
           <div class="control">
@@ -65,11 +84,8 @@
     <!-- DASHBOARD DOCENTE -->
     <section id="teacher-dashboard" class="section is-hidden"></section>
 
-    <!-- LIBRERÍAS (Bulma / SweetAlert2 / Toastify) -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
-    />
+    <!-- LIBRERÍAS -->
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <link
