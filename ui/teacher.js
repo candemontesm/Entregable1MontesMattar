@@ -24,42 +24,55 @@ export function renderTeacherDash(container, teacher, db) {
 
   // NUEVA TAREA
   container.querySelector("#btn-task").onclick = async () => {
+    const courseOptions = [...new Set(db.students.map((s) => s.course))]
+      .map((c) => `<option value="${c}">${c}</option>`)
+      .join("");
+
     const { value: form } = await Swal.fire({
       title: "Nueva tarea",
       html: `
-        <input id="sw-title"  class="swal2-input" placeholder="Título">
-        <textarea id="sw-desc" class="swal2-textarea" placeholder="Descripción"></textarea>
-        <input id="sw-student" class="swal2-input" placeholder="ID estudiante">
-        <input id="sw-due"    class="swal2-input" type="date">
-      `,
+      <select id="sw-course" class="swal2-select">
+        ${courseOptions}
+      </select>
+      <input id="sw-title" class="swal2-input" placeholder="Título">
+      <textarea id="sw-desc" class="swal2-textarea" placeholder="Descripción"></textarea>
+      <input id="sw-due" class="swal2-input" type="date">
+    `,
       focusConfirm: false,
       preConfirm: () => ({
+        course: document.getElementById("sw-course").value,
         title: document.getElementById("sw-title").value,
         description: document.getElementById("sw-desc").value,
-        studentId: +document.getElementById("sw-student").value,
         dueDate: document.getElementById("sw-due").value,
       }),
     });
 
     if (!form) return;
 
-    // push en DB
-    const newTask = {
-      id: Date.now(),
-      teacherId: teacher.id,
-      subject: teacher.subject,
-      done: false,
-      ...form,
-    };
-    db.tasks.push(newTask);
+    /* crea UNA tarea por cada estudiante del curso */
+    const recipients = db.students.filter((s) => s.course === form.course);
+
+    recipients.forEach((stu) =>
+      db.tasks.push({
+        id: Date.now() + Math.random(),
+        teacherId: teacher.id,
+        studentId: stu.id,
+        subject: teacher.subject,
+        done: false,
+        ...form,
+      })
+    );
+
     dbSet(db);
-    Toastify({ text: "Tarea creada", duration: 2000 }).showToast();
+    Toastify({
+      text: `Tarea enviada a ${recipients.length} alumnxs`,
+      duration: 2500,
+    }).showToast();
   };
 
   // NUEVA NOTA
-  /* ─── NUEVA NOTA ─── */
+
   container.querySelector("#btn-grade").onclick = async () => {
-    /* opciones de alumnxs */
     const studentOptions = db.students
       .map(
         (s) =>
