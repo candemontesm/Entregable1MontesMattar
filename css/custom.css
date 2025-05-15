@@ -114,3 +114,9 @@ body::before {
   opacity: 0.4;
   pointer-events: none;
 }
+
+/* separación del botón Cerrar sesión */
+.logout-wrapper {
+  margin: 1rem 0 1.25rem; /* arriba - abajo */
+  text-align: center; /* centra el botón */
+}

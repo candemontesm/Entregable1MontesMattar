@@ -1,20 +1,59 @@
-/* global Swal, Toastify */
-import { initDatabase, dbGet, dbSet } from "../services/database.js";
+import { initDatabase } from "../services/database.js";
 import { ROLES } from "../models/ROLES.js";
 import { openRegisterModal } from "../ui/register.js";
+import { renderStudentDash } from "../ui/student.js";
+import { renderTeacherDash } from "../ui/teacher.js";
+
+/* global Swal */
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // 1) cargar BD (JSON -> LS)
+  // 1. Cargar base de datos (JSON -> LS)
   const db = await initDatabase();
 
+  // AUTO-LOGIN
+  const current = JSON.parse(localStorage.getItem("currentUser") || "null");
+
+  if (current) {
+    // busca al usuario por id y rol
+    const user =
+      current.role === ROLES.STUDENT
+        ? db.students.find((s) => s.id === current.id)
+        : db.teachers.find((t) => t.id === current.id);
+
+    if (user) {
+      // oculta login y título
+      document.getElementById("login-container").classList.add("is-hidden");
+      document.getElementById("main-title").classList.add("is-hidden");
+
+      // lanza el dashboard correspondiente
+      if (current.role === ROLES.STUDENT) {
+        renderStudentDash(
+          document.getElementById("student-dashboard"),
+          user,
+          db
+        );
+      } else {
+        renderTeacherDash(
+          document.getElementById("teacher-dashboard"),
+          user,
+          db
+        );
+      }
+      return;
+    } else {
+      localStorage.removeItem("currentUser");
+    }
+  }
+
+  //  FLUJO DE LOGIN NORMAL
   const inputEmail = document.getElementById("login-email");
   const inputPass = document.getElementById("login-pass");
   const btnLogin = document.getElementById("btn-login");
+  const btnShowRegister = document.getElementById("btn-show-register");
 
   const studentDash = document.getElementById("student-dashboard");
   const teacherDash = document.getElementById("teacher-dashboard");
   const loginContainer = document.getElementById("login-container");
-  const btnShowRegister = document.getElementById("btn-show-register");
 
   btnShowRegister.addEventListener("click", () => openRegisterModal(db));
 
@@ -31,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // guardo sesión LS
+    // guarda sesión
     localStorage.setItem(
       "currentUser",
       JSON.stringify({
@@ -40,13 +79,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       })
     );
 
-    // muestro dashboard
+    // muestra dashboard
     loginContainer.classList.add("is-hidden");
     document.getElementById("main-title").classList.add("is-hidden");
-    if (user.course) renderStudentDash(studentDash, user, db);
-    else renderTeacherDash(teacherDash, user, db);
+
+    if (user.course) {
+      renderStudentDash(studentDash, user, db);
+    } else {
+      renderTeacherDash(teacherDash, user, db);
+    }
   });
 });
-
-import { renderStudentDash } from "../ui/student.js";
-import { renderTeacherDash } from "../ui/teacher.js";

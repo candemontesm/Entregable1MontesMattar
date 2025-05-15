@@ -13,7 +13,6 @@ const getUserName = (id, db) => {
 export function renderStudentDash(container, student, db) {
   container.classList.remove("is-hidden");
 
-  /* --- Saludo (fuera de la caja) --- */
   container.innerHTML = `
     <h2 class="dashboard-greeting">
       Hola, <br>
@@ -21,7 +20,6 @@ export function renderStudentDash(container, student, db) {
     </h2>
   `;
 
-  /* --- Caja verde con botones --- */
   container.insertAdjacentHTML(
     "beforeend",
     `
@@ -39,36 +37,77 @@ export function renderStudentDash(container, student, db) {
         </div>
       </div>
 
+      <div class="logout-wrapper">
+        <button id="btn-logout" class="button is-danger">
+          <i class="fa-solid fa-right-from-bracket fa-fw"></i> Cerrar sesión
+        </button>
+      </div>
+
       <div id="student-content" class="mt-4"></div>
     `
   );
 
+  /* ----------  referencias a nodos ---------- */
   const content = container.querySelector("#student-content");
+  const wrapperLogout = container.querySelector(".logout-wrapper");
+  const btnLogout = container.querySelector("#btn-logout");
 
-  /* Actividades */
-  container.querySelector("#btn-tasks").onclick = () => {
+  const btnTasks = container.querySelector("#btn-tasks");
+  const btnGrades = container.querySelector("#btn-grades");
+  const btnMsg = container.querySelector("#btn-msg");
+
+  /* ----------  helpers y estado ---------- */
+  let currentView = null; // "tasks" | "grades" | "msg" | null
+
+  const placeLogoutAfterContent = () => {
+    content.insertAdjacentElement("afterend", btnLogout);
+  };
+  const resetLogoutPosition = () => {
+    wrapperLogout.appendChild(btnLogout);
+  };
+  const resetDashboard = () => {
+    content.innerHTML = "";
+    currentView = null;
+    resetLogoutPosition();
+  };
+
+  /* ----------  listeners ---------- */
+
+  /* CERRAR SESIÓN */
+  btnLogout.onclick = () => {
+    localStorage.removeItem("currentUser");
+    location.reload();
+  };
+
+  /* ----- TAREAS ----- */
+  btnTasks.onclick = () => {
+    if (currentView === "tasks") {
+      resetDashboard();
+      return;
+    }
+
     const tasks = db.tasks.filter((t) => t.studentId === student.id && !t.done);
 
     content.innerHTML = tasks.length
       ? tasks
           .map(
             (t) => `
-        <article class="message is-light mb-3">
-          <div class="message-header">
-            <p>${t.title} <small>(${t.subject})</small></p>
-            <button class="button is-small is-success" data-id="${t.id}">
-              Marcar hecha
-            </button>
-          </div>
-          <div class="message-body">
-            ${t.description}<br>Vence: ${t.dueDate}
-          </div>
-        </article>`
+      <article class="message is-light mb-3">
+        <div class="message-header">
+          <p>${t.title} <small>(${t.subject})</small></p>
+          <button class="button is-small is-success" data-id="${t.id}">
+            Marcar hecha
+          </button>
+        </div>
+        <div class="message-body">
+          ${t.description}<br>Vence: ${t.dueDate}
+        </div>
+      </article>`
           )
           .join("")
       : "<p>No hay tareas pendientes 🎉</p>";
 
-    /* marcar tarea como hecha */
+    /* marcar como hecha */
     content.querySelectorAll("[data-id]").forEach((btn) => {
       btn.onclick = () => {
         const id = +btn.dataset.id;
@@ -79,38 +118,54 @@ export function renderStudentDash(container, student, db) {
         btn.closest("article").remove();
       };
     });
+
+    currentView = "tasks";
+    placeLogoutAfterContent();
   };
 
-  /*  Notas */
-  container.querySelector("#btn-grades").onclick = () => {
+  /* ----- NOTAS ----- */
+  btnGrades.onclick = () => {
+    if (currentView === "grades") {
+      resetDashboard();
+      return;
+    }
+
     const grades = db.grades
       .filter((g) => g.studentId === student.id)
       .sort((a, b) => b.date.localeCompare(a.date));
 
     content.innerHTML = grades.length
       ? `<table class="table is-fullwidth">
-           <thead>
-             <tr><th>Materia</th><th>Nota</th><th>Fecha</th><th>Descripción</th></tr>
-           </thead>
-           <tbody>
-             ${grades
-               .map(
-                 (g) =>
-                   `<tr>
-                      <td>${g.subject}</td>
-                      <td>${g.grade}</td>
-                      <td>${g.date}</td>
-                      <td>${g.description || ""}</td>
-                    </tr>`
-               )
-               .join("")}
-           </tbody>
-         </table>`
+         <thead>
+           <tr><th>Materia</th><th>Nota</th><th>Fecha</th><th>Descripción</th></tr>
+         </thead>
+         <tbody>
+           ${grades
+             .map(
+               (g) => `
+                 <tr>
+                   <td>${g.subject}</td>
+                   <td>${g.grade}</td>
+                   <td>${g.date}</td>
+                   <td>${g.description || ""}</td>
+                 </tr>`
+             )
+             .join("")}
+         </tbody>
+       </table>`
       : "<p>Aún no hay notas registradas.</p>";
+
+    currentView = "grades";
+    placeLogoutAfterContent();
   };
 
-  /*  Mensajes */
-  container.querySelector("#btn-msg").onclick = () => {
+  /* ----- MENSAJES ----- */
+  btnMsg.onclick = () => {
+    if (currentView === "msg") {
+      resetDashboard();
+      return;
+    }
+
     const allMsgs = db.messages.filter(
       (m) => m.toId === student.id || m.fromId === student.id
     );
@@ -123,38 +178,39 @@ export function renderStudentDash(container, student, db) {
         ? arr
             .map(
               (m) => `
-          <article class="message is-link-light mb-2" data-mid="${m.id}">
-            <div class="message-header">
-              <p>${m.subject}
-              <small class="has-text-grey">— de ${getUserName(
+        <article class="message is-link-light mb-2" data-mid="${m.id}">
+          <div class="message-header">
+            <p>
+              ${m.subject}
+              <small class="has-text-grey">— de ${getUserName(
                 m.fromId,
                 db
               )}</small>
-              </p>
-              <small>${new Date(m.timestamp).toLocaleString()}</small>
-            </div>
-            <div class="message-body">
-              ${m.body}
-              ${
-                m.fromId !== student.id
-                  ? `<button class="button is-small is-light mt-2"
-                            data-reply="${m.fromId}">
-                       Responder
-                     </button>`
-                  : ""
-              }
-            </div>
-          </article>`
+            </p>
+            <small>${new Date(m.timestamp).toLocaleString()}</small>
+          </div>
+          <div class="message-body">
+            ${m.body}
+            ${
+              m.fromId !== student.id
+                ? `<button class="button is-small is-light mt-2"
+                          data-reply="${m.fromId}">
+                     Responder
+                   </button>`
+                : ""
+            }
+          </div>
+        </article>`
             )
             .join("")
         : "<p class='mb-3'>Sin mensajes.</p>");
 
     content.innerHTML =
-      renderSection("📨 Nuevos mensajes", unread) +
+      renderSection("📨 Nuevos mensajes", unread) +
       "<hr>" +
-      renderSection("📁 Mensajes leídos", readMsgs);
+      renderSection("📁 Mensajes leídos", readMsgs);
 
-    /* marcar como leído al hacer clic */
+    /* marcar como leído */
     content.querySelectorAll("[data-mid]").forEach((art) => {
       art.addEventListener("click", () => {
         const id = +art.dataset.mid;
@@ -193,5 +249,8 @@ export function renderStudentDash(container, student, db) {
         toast("Respuesta enviada", "success");
       });
     });
+
+    currentView = "msg";
+    placeLogoutAfterContent();
   };
 }

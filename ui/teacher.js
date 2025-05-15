@@ -11,7 +11,8 @@ import { toast } from "../services/notify.js";
 
 export function renderTeacherDash(container, teacher, db) {
   container.classList.remove("is-hidden");
-  /* --- Saludo --- */
+
+  /* ---------- 1. saludo ---------- */
   container.innerHTML = `
     <h2 class="dashboard-greeting">
       Hola, <br>
@@ -19,7 +20,7 @@ export function renderTeacherDash(container, teacher, db) {
     </h2>
   `;
 
-  /* --- Caja verde con botones --- */
+  /* ---------- 2. botones + logout + contenedor ---------- */
   container.insertAdjacentHTML(
     "beforeend",
     `
@@ -37,12 +38,50 @@ export function renderTeacherDash(container, teacher, db) {
         </div>
       </div>
 
+      <div class="logout-wrapper">
+        <button id="btn-logout" class="button is-danger">
+          <i class="fa-solid fa-right-from-bracket fa-fw"></i> Cerrar sesión
+        </button>
+      </div>
+
       <div id="teacher-content" class="mt-4"></div>
     `
   );
 
-  // NUEVA TAREA
-  container.querySelector("#btn-task").onclick = async () => {
+  /* ---------- 3. referencias ---------- */
+  const content = container.querySelector("#teacher-content");
+  const wrapperLogout = container.querySelector(".logout-wrapper");
+  const btnLogout = container.querySelector("#btn-logout");
+
+  const btnMsgs = container.querySelector("#btn-msgs");
+  const btnTask = container.querySelector("#btn-task");
+  const btnGrade = container.querySelector("#btn-grade");
+
+  /* ---------- 4. estado + helpers ---------- */
+  let currentView = null; // "task" | "grade" | "msg" | null
+
+  const placeLogoutAfterContent = () =>
+    content.insertAdjacentElement("afterend", btnLogout);
+  const resetLogoutPosition = () => wrapperLogout.appendChild(btnLogout);
+  const resetDashboard = () => {
+    content.innerHTML = "";
+    currentView = null;
+    resetLogoutPosition();
+  };
+
+  /* ---------- 5. logout ---------- */
+  btnLogout.onclick = () => {
+    localStorage.removeItem("currentUser");
+    location.reload();
+  };
+
+  /* ---------- 6. NUEVA TAREA ---------- */
+  btnTask.onclick = async () => {
+    if (currentView === "task") {
+      resetDashboard();
+      return;
+    }
+
     const courseOptions = [...new Set(db.students.map((s) => s.course))]
       .map((c) => `<option value="${c}">${c}</option>`)
       .join("");
@@ -50,13 +89,11 @@ export function renderTeacherDash(container, teacher, db) {
     const { value: form } = await Swal.fire({
       title: "Nueva tarea",
       html: `
-      <select id="sw-course" class="swal2-select">
-        ${courseOptions}
-      </select>
-      <input id="sw-title" class="swal2-input" placeholder="Título">
-      <textarea id="sw-desc" class="swal2-textarea" placeholder="Descripción"></textarea>
-      <input id="sw-due" class="swal2-input" type="date">
-    `,
+        <select id="sw-course" class="swal2-select">${courseOptions}</select>
+        <input id="sw-title" class="swal2-input" placeholder="Título">
+        <textarea id="sw-desc" class="swal2-textarea" placeholder="Descripción"></textarea>
+        <input id="sw-due" class="swal2-input" type="date">
+      `,
       focusConfirm: false,
       preConfirm: () => ({
         course: document.getElementById("sw-course").value,
@@ -68,9 +105,7 @@ export function renderTeacherDash(container, teacher, db) {
 
     if (!form) return;
 
-    /* crea UNA tarea por cada estudiante del curso */
     const recipients = db.students.filter((s) => s.course === form.course);
-
     recipients.forEach((stu) =>
       db.tasks.push({
         id: Date.now() + Math.random(),
@@ -81,35 +116,43 @@ export function renderTeacherDash(container, teacher, db) {
         ...form,
       })
     );
-
     dbSet(db);
     toast(`Tarea enviada a ${recipients.length} alumnxs`, "success");
+
+    content.innerHTML = `<p class="has-text-success">
+      Se envió la tarea a ${recipients.length} alumnxs de ${form.course}.
+    </p>`;
+
+    currentView = "task";
+    placeLogoutAfterContent();
   };
 
-  // NUEVA NOTA
+  /* ---------- 7. NUEVA NOTA ---------- */
+  btnGrade.onclick = async () => {
+    if (currentView === "grade") {
+      resetDashboard();
+      return;
+    }
 
-  container.querySelector("#btn-grade").onclick = async () => {
     const studentOptions = db.students
       .map(
         (s) =>
           `<option value="${s.id}">
-           ${s.firstName} ${s.lastName} (ID ${s.id})
-         </option>`
+             ${s.firstName} ${s.lastName} (ID ${s.id})
+           </option>`
       )
       .join("");
 
     const { value: form } = await Swal.fire({
       title: "Cargar nota",
       html: `
-      <select id="sw-student-note" class="swal2-select">
-        ${studentOptions}
-      </select>
-      <input id="sw-grade" class="swal2-input" type="number" min="1" max="10"
-             placeholder="Nota (1‑10)">
-      <input id="sw-date" class="swal2-input" type="date"
-             value="${new Date().toISOString().slice(0, 10)}">
-      <input id="sw-desc" class="swal2-input" placeholder="Descripción (p.ej., Prueba 1)">
-    `,
+        <select id="sw-student-note" class="swal2-select">${studentOptions}</select>
+        <input id="sw-grade" class="swal2-input" type="number" min="1" max="10" placeholder="Nota (1-10)">
+        <input id="sw-date" class="swal2-input" type="date" value="${new Date()
+          .toISOString()
+          .slice(0, 10)}">
+        <input id="sw-desc" class="swal2-input" placeholder="Descripción">
+      `,
       focusConfirm: false,
       preConfirm: () => ({
         studentId: +document.getElementById("sw-student-note").value,
@@ -132,11 +175,22 @@ export function renderTeacherDash(container, teacher, db) {
     });
     dbSet(db);
     toast("Nota cargada", "success");
+
+    content.innerHTML = `<p class="has-text-success">
+      Nota ${form.grade} cargada para el/la estudiante ID ${form.studentId}.
+    </p>`;
+
+    currentView = "grade";
+    placeLogoutAfterContent();
   };
 
-  //  VER / ENVIAR MENSAJES
+  /* ---------- 8. MENSAJES ---------- */
+  btnMsgs.onclick = () => {
+    if (currentView === "msg") {
+      resetDashboard();
+      return;
+    }
 
-  container.querySelector("#btn-msgs").onclick = () => {
     const allMsgs = db.messages.filter(
       (m) => m.toId === teacher.id || m.fromId === teacher.id
     );
@@ -149,35 +203,31 @@ export function renderTeacherDash(container, teacher, db) {
         ? arr
             .map(
               (m) => `
-        <article class="message is-light mb-2" data-mid="${m.id}">
-          <div class="message-header">
-            <p>${m.subject}
-            <small class="has-text-grey">— de ${getUserName(
-              m.fromId,
-              db
-            )}</small>
-            </p>
-            <small>${new Date(m.timestamp).toLocaleString()}</small>
-          </div>
-          <div class="message-body">
-            ${m.body}
-          </div>
-        </article>`
+            <article class="message is-light mb-2" data-mid="${m.id}">
+              <div class="message-header">
+                <p>${m.subject}
+                <small class="has-text-grey">— de ${getUserName(
+                  m.fromId,
+                  db
+                )}</small></p>
+                <small>${new Date(m.timestamp).toLocaleString()}</small>
+              </div>
+              <div class="message-body">${m.body}</div>
+            </article>`
             )
             .join("")
         : "<p class='mb-3'>Sin mensajes.</p>");
 
-    const content = container.querySelector("#teacher-content");
     content.innerHTML = `
-    <button id="btn-new-msg" class="button is-small is-link mb-4">
-      Nuevo mensaje
-    </button>
-    ${renderSection("📨 Nuevos mensajes", unread)}
-    <hr>
-    ${renderSection("📁 Mensajes viejos", readMsgs)}
-  `;
+      <button id="btn-new-msg" class="button is-small is-link mb-4">
+        Nuevo mensaje
+      </button>
+      ${renderSection("📨 Nuevos mensajes", unread)}
+      <hr>
+      ${renderSection("📁 Mensajes leídos", readMsgs)}
+    `;
 
-    // Marcar como leído
+    /* marcar como leído */
     content.querySelectorAll("[data-mid]").forEach((art) => {
       art.addEventListener("click", () => {
         const id = +art.dataset.mid;
@@ -191,24 +241,24 @@ export function renderTeacherDash(container, teacher, db) {
       });
     });
 
-    // Nuevo mensaje
+    /* nuevo mensaje */
     content.querySelector("#btn-new-msg").onclick = async () => {
       const studentOptions = db.students
         .map(
           (s) =>
             `<option value="${s.id}">
-             ${s.firstName} ${s.lastName} (ID ${s.id})
-           </option>`
+               ${s.firstName} ${s.lastName} (ID ${s.id})
+             </option>`
         )
         .join("");
 
       const { value: form } = await Swal.fire({
         title: "Nuevo mensaje",
         html: `
-        <select id="sw-to" class="swal2-select">${studentOptions}</select>
-        <input id="sw-subj" class="swal2-input" placeholder="Asunto">
-        <textarea id="sw-body" class="swal2-textarea" placeholder="Mensaje"></textarea>
-      `,
+          <select id="sw-to" class="swal2-select">${studentOptions}</select>
+          <input id="sw-subj" class="swal2-input" placeholder="Asunto">
+          <textarea id="sw-body" class="swal2-textarea" placeholder="Mensaje"></textarea>
+        `,
         focusConfirm: false,
         preConfirm: () => ({
           toId: +document.getElementById("sw-to").value,
@@ -228,5 +278,8 @@ export function renderTeacherDash(container, teacher, db) {
       dbSet(db);
       toast("Mensaje enviado", "success");
     };
+
+    currentView = "msg";
+    placeLogoutAfterContent();
   };
 }
