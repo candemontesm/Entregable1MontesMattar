@@ -62,6 +62,8 @@ export function renderTeacherDash(container, teacher, db) {
 
   const placeLogoutAfterContent = () =>
     content.insertAdjacentElement("afterend", btnLogout);
+  btnLogout.classList.add("is-pulled-right");
+
   const resetLogoutPosition = () => wrapperLogout.appendChild(btnLogout);
   const resetDashboard = () => {
     content.innerHTML = "";
