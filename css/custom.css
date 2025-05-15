@@ -115,9 +115,8 @@ body::before {
   pointer-events: none;
 }
 
-/* separación del botón Cerrar sesión */
 .logout-wrapper {
   margin: 1rem 0 1.25rem;
-  display: flex; /* <-- NUEVO */
+  display: flex;
   justify-content: flex-end;
 }

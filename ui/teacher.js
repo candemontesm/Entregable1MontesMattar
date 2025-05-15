@@ -12,7 +12,6 @@ import { toast } from "../services/notify.js";
 export function renderTeacherDash(container, teacher, db) {
   container.classList.remove("is-hidden");
 
-  /* ---------- 1. saludo ---------- */
   container.innerHTML = `
     <h2 class="dashboard-greeting">
       Hola, <br>
@@ -20,7 +19,6 @@ export function renderTeacherDash(container, teacher, db) {
     </h2>
   `;
 
-  /* ---------- 2. botones + logout + contenedor ---------- */
   container.insertAdjacentHTML(
     "beforeend",
     `
@@ -48,7 +46,6 @@ export function renderTeacherDash(container, teacher, db) {
     `
   );
 
-  /* ---------- 3. referencias ---------- */
   const content = container.querySelector("#teacher-content");
   const wrapperLogout = container.querySelector(".logout-wrapper");
   const btnLogout = container.querySelector("#btn-logout");
@@ -57,8 +54,7 @@ export function renderTeacherDash(container, teacher, db) {
   const btnTask = container.querySelector("#btn-task");
   const btnGrade = container.querySelector("#btn-grade");
 
-  /* ---------- 4. estado + helpers ---------- */
-  let currentView = null; // "task" | "grade" | "msg" | null
+  let currentView = null;
 
   const placeLogoutAfterContent = () =>
     content.insertAdjacentElement("afterend", btnLogout);
@@ -71,13 +67,12 @@ export function renderTeacherDash(container, teacher, db) {
     resetLogoutPosition();
   };
 
-  /* ---------- 5. logout ---------- */
   btnLogout.onclick = () => {
     localStorage.removeItem("currentUser");
     location.reload();
   };
 
-  /* ---------- 6. NUEVA TAREA ---------- */
+  /* NUEVA TAREA  */
   btnTask.onclick = async () => {
     if (currentView === "task") {
       resetDashboard();
@@ -129,7 +124,7 @@ export function renderTeacherDash(container, teacher, db) {
     placeLogoutAfterContent();
   };
 
-  /* ---------- 7. NUEVA NOTA ---------- */
+  /* NUEVA NOTA  */
   btnGrade.onclick = async () => {
     if (currentView === "grade") {
       resetDashboard();
@@ -186,7 +181,7 @@ export function renderTeacherDash(container, teacher, db) {
     placeLogoutAfterContent();
   };
 
-  /* ---------- 8. MENSAJES ---------- */
+  /* MENSAJES */
   btnMsgs.onclick = () => {
     if (currentView === "msg") {
       resetDashboard();

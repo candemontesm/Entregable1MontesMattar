@@ -47,7 +47,6 @@ export function renderStudentDash(container, student, db) {
     `
   );
 
-  /* ----------  referencias a nodos ---------- */
   const content = container.querySelector("#student-content");
   const wrapperLogout = container.querySelector(".logout-wrapper");
   const btnLogout = container.querySelector("#btn-logout");
@@ -56,8 +55,7 @@ export function renderStudentDash(container, student, db) {
   const btnGrades = container.querySelector("#btn-grades");
   const btnMsg = container.querySelector("#btn-msg");
 
-  /* ----------  helpers y estado ---------- */
-  let currentView = null; // "tasks" | "grades" | "msg" | null
+  let currentView = null;
 
   const placeLogoutAfterContent = () => {
     content.insertAdjacentElement("afterend", btnLogout);
@@ -72,15 +70,13 @@ export function renderStudentDash(container, student, db) {
     resetLogoutPosition();
   };
 
-  /* ----------  listeners ---------- */
-
   /* CERRAR SESIÓN */
   btnLogout.onclick = () => {
     localStorage.removeItem("currentUser");
     location.reload();
   };
 
-  /* ----- TAREAS ----- */
+  /* TAREAS */
   btnTasks.onclick = () => {
     if (currentView === "tasks") {
       resetDashboard();
@@ -124,7 +120,7 @@ export function renderStudentDash(container, student, db) {
     placeLogoutAfterContent();
   };
 
-  /* ----- NOTAS ----- */
+  /* NOTAS */
   btnGrades.onclick = () => {
     if (currentView === "grades") {
       resetDashboard();
@@ -160,7 +156,7 @@ export function renderStudentDash(container, student, db) {
     placeLogoutAfterContent();
   };
 
-  /* ----- MENSAJES ----- */
+  /*  MENSAJES */
   btnMsg.onclick = () => {
     if (currentView === "msg") {
       resetDashboard();

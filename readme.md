@@ -1,58 +1,63 @@
-# 🧪 Simulador de Aula Virtual - CPEM 30
+# Proyecto Final – Aula Virtual CPEM 30
 
-Este proyecto es un simulador básico de una plataforma virtual de comunicación entre docentes y estudiantes, desarrollado en JavaScript. Forma parte de la primera preentrega del curso de JavaScript para principiantes en CoderHouse.
+Simulador interactivo • Curso JavaScript (Coderhouse)
 
----
+## Descripción
 
-## 📌 Descripción general
+Aplicación web que replica un aula virtual para el CPEM 30.  
+Permite a **alumnos** y **profesores**:
 
-El simulador está inspirado en plataformas como el aula virtual o SIU Guaraní, adaptado a la realidad del CPEM 30 (escuela secundaria de la Provincia de Neuquén). Propone un entorno donde cada persona usuaria puede interactuar con información académica relevante de acuerdo a su rol institucional.
+| Rol      | Funciones                                                      |
+| -------- | -------------------------------------------------------------- |
+| Alumnx   | • Ver tareas pendientes • Ver sus notas • Leer/enviar mensajes |
+| Profesor | • Cargar notas • Crear tareas (por curso)• Enviar mensajes     |
 
-La lógica permite validar si una persona está cargada en la base de datos institucional, para luego habilitar el registro de su cuenta. Una vez ingresada, accede a un dashboard con opciones específicas: los y las estudiantes pueden ver sus notas y tareas pendientes, mientras que el cuerpo docente puede leer mensajes recibidos y publicar avisos.
+Datos iniciales se cargan desde JSON y se persisten en **localStorage**.
 
-En esta segunda entrega, se integró JavaScript con HTML y se agregó interactividad mediante el DOM, reemplazando los cuadros de diálogo por formularios visuales y botones.
+## Demo rápida
 
----
+| Usuario demo                | Contraseña | Rol      |
+| --------------------------- | ---------- | -------- |
+| `juan.perez@cpem30.edu.ar`  | `Clave123` | Alumno   |
+| `maria.gomez@cpem30.edu.ar` | `Profe123` | Profesor |
 
-## 🧑‍🎓 Funcionalidades para estudiantes
+## Cómo ejecutar
 
-- Registro con nombre, mail y contraseña (validado con DNI y número de legajo).
-- Ingreso mediante mail y contraseña.
-- Visualización de notas por materia.
-- Consulta de tareas pendientes.
-- Sesión recordada mediante localStorage.
+1. Cloná el repo:
+   ```bash
+   git clone https://github.com/candemontesm/Entregable2MontesMattar.git
+   cd Entregable2MontesMattar
+   ```
+2. Abrí index.html con Live Server (VS Code) o cualquier servidor estático.
+3. Listo! (El sitio es 100 % front-end).
 
----
+## Tecnologías
 
-## 👩‍🏫 Funcionalidades para docentes
+HTML5 + Bulma (estilos base)
+CSS custom (paleta “Solar Green”, fuentes Poppins + Inter)
+JavaScript ES Modules
+SweetAlert2 (modales) • Toastify.js (notificaciones)
+Font Awesome (iconos)
 
-- Registro con nombre, mail, contraseña y materia (validados con número de empleadx y legajo).
-- Ingreso mediante mail y contraseña.
-- Visualización de mensajes recibidos.
-- Publicación de avisos para estudiantes.
-- Sesión recordada mediante localStorage.
+## Estructura
 
----
+assets/
+data/… → JSON simulados (alumnos, tareas, etc.)
+css/
+custom.css → paleta y overrides
+js/
+main.js → login + router
+ui/… → dashboards
+models/… → clases Usuario, Alumno, Profesor
+services/… → fetch JSON, notificaciones, helpers
 
-## 🛠️ Herramientas utilizadas
+## Features destacadas
 
-- JavaScript (vanilla)
-- HTML5 + DOM API
-- localStorage para persistencia de sesión y base de datos
-- Regex para validación de mail y contraseña
-- Clases, herencia, y estructura modular del código
-- Funciones reutilizables, condicionales, bucles, eventos
+Auto-login: recuerda sesión y entra directo al dashboard.
+Toggle de vistas: un segundo clic vuelve a la pantalla principal.
+Botón “Cerrar sesión” que se reubica según el contenido mostrado.
+Persistencia en LocalStorage (sin backend).
 
----
+## Autora
 
-## 🗂️ Estructura del proyecto
-
-📁 SIMULADOR/ 
-├── 📁 js/ 
-│ ├── clases.js 
-│ ├── data.js 
-│ └── main.js 
-├── 📁 css/ 
-│ └── style.css 
-├── 📄 index.html 
-└── 📄 readme.md
+Candela Montes Mattar • Coderhouse – Curso JavaScript (2025)
