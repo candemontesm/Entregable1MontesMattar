@@ -91,6 +91,7 @@ export async function openRegisterModal(db) {
     JSON.stringify({ id: newUserBase.id, role })
   );
   document.getElementById("login-container").classList.add("is-hidden");
+  document.getElementById("main-title").classList.add("is-hidden");
   if (role === ROLES.STUDENT) {
     const { renderStudentDash } = await import("./student.js");
     renderStudentDash(

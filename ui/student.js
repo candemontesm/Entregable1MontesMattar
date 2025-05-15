@@ -12,30 +12,36 @@ const getUserName = (id, db) => {
 
 export function renderStudentDash(container, student, db) {
   container.classList.remove("is-hidden");
+
+  /* --- Saludo (fuera de la caja) --- */
   container.innerHTML = `
-    <div class="dashboard-header">
-    <h2 class="title is-4 mb-0"> Hola,  ${student.firstName}</h2>
-
-    <div class="buttons mb-5">
-      <button id="btn-tasks"  class="button is-link">
-        <i class="fa-solid fa-list-check fa-fw"></i>
-        Actividades
-     </button>
-
-      <button id="btn-grades" class="button is-info">
-       <i class="fa-solid fa-chart-column fa-fw"></i>
-        Notas
-      </button>
-
-      <button id="btn-msg"    class="button is-warning">
-        <i class="fa-solid fa-envelope fa-fw"></i>
-        Mensajes
-     </button>
-
-    </div>
-
-    <div id="student-content" class="mt-4"></div>
+    <h2 class="dashboard-greeting">
+      Hola, <br>
+       ${student.firstName}
+    </h2>
   `;
+
+  /* --- Caja verde con botones --- */
+  container.insertAdjacentHTML(
+    "beforeend",
+    `
+      <div class="dashboard-header">
+        <div class="buttons is-flex is-justify-content-center is-flex-wrap-wrap">
+          <button id="btn-tasks" class="button is-link m-1">
+            <i class="fa-solid fa-list-check fa-fw"></i> Actividades
+          </button>
+          <button id="btn-grades" class="button is-info m-1">
+            <i class="fa-solid fa-chart-column fa-fw"></i> Notas
+          </button>
+          <button id="btn-msg" class="button is-warning m-1">
+            <i class="fa-solid fa-envelope fa-fw"></i> Mensajes
+          </button>
+        </div>
+      </div>
+
+      <div id="student-content" class="mt-4"></div>
+    `
+  );
 
   const content = container.querySelector("#student-content");
 

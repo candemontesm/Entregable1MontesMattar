@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // muestro dashboard
     loginContainer.classList.add("is-hidden");
+    document.getElementById("main-title").classList.add("is-hidden");
     if (user.course) renderStudentDash(studentDash, user, db);
     else renderTeacherDash(teacherDash, user, db);
   });

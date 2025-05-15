@@ -11,28 +11,35 @@ import { toast } from "../services/notify.js";
 
 export function renderTeacherDash(container, teacher, db) {
   container.classList.remove("is-hidden");
+  /* --- Saludo --- */
   container.innerHTML = `
-    <div class="dashboard-header">
-    <h2 class="title is-4 mb-0">Hola,  Profe ${teacher.lastName}!</h2>
-
-    <div class="buttons mb-5">
-      <button id="btn-msgs"   class="button is-warning">
-        <i class="fa-solid fa-envelope fa-fw"></i>
-        Mensajes
-      </button>
-      <button id="btn-task"   class="button is-success">
-        <i class="fa-solid fa-clipboard-list fa-fw"></i>
-        Nueva tarea
-      </button>
-
-      <button id="btn-grade"  class="button is-link">
-        <i class="fa-solid fa-pen-to-square fa-fw"></i>
-        Nueva nota
-      </button>
-    </div>
-
-    <div id="teacher-content" class="mt-4"></div>
+    <h2 class="dashboard-greeting">
+      Hola, <br>
+       Profe ${teacher.lastName}
+    </h2>
   `;
+
+  /* --- Caja verde con botones --- */
+  container.insertAdjacentHTML(
+    "beforeend",
+    `
+      <div class="dashboard-header">
+        <div class="buttons is-flex is-justify-content-center is-flex-wrap-wrap">
+          <button id="btn-msgs" class="button is-warning m-1">
+            <i class="fa-solid fa-envelope fa-fw"></i> Mensajes
+          </button>
+          <button id="btn-task" class="button is-success m-1">
+            <i class="fa-solid fa-clipboard-list fa-fw"></i> Nueva tarea
+          </button>
+          <button id="btn-grade" class="button is-link m-1">
+            <i class="fa-solid fa-pen-to-square fa-fw"></i> Nueva nota
+          </button>
+        </div>
+      </div>
+
+      <div id="teacher-content" class="mt-4"></div>
+    `
+  );
 
   // NUEVA TAREA
   container.querySelector("#btn-task").onclick = async () => {
