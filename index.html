@@ -1,86 +1,99 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aula virtual CPEM 30</title>
-    <link rel="stylesheet" href="./css/style.css">
 
-</head>
+    <link rel="stylesheet" href="./css/style.css" />
 
-<body>
-    <h1 id="main-title">Bienvenidx al Aula Virtual del CPEM 30</h1>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
 
-    <section id="inicio-sesion" style="display: none;">
-        <p id="saludo-personalizado"></p>
-        <input type="password" id="input-password" placeholder="Ingresá tu contraseña">
-        <button id="btn-ingresar-sesion">Aceptar</button>
-        <br>
-        <button id="btn-cambiar-usuario">Ingresar con usuario diferente</button>
-        <button id="btn-registrarse-desde-sesion">Registrarse</button>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="css/custom.css" />
+  </head>
+
+  <body>
+    <section class="section has-text-centered">
+      <h1 id="main-title" class="title is-3">
+        ¡Bienvenidx al <br />
+        Aula Virtual del CPEM&nbsp;30!
+      </h1>
     </section>
 
-    <section id="seleccion-inicial" style="display: none;">
-        <button id="btn-ingresar">Ingresar</button>
-        <button id="btn-registrarse">Registrarse</button>
+    <!-- LOGIN -->
+    <section class="section">
+      <div id="login-container">
+        <h2 class="title is-3 has-text-centered mb-4">Iniciar sesión</h2>
+
+        <!-- Email -->
+        <div class="field">
+          <label class="label" for="login-email">Email</label>
+          <div class="control">
+            <input
+              id="login-email"
+              class="input"
+              type="email"
+              placeholder="tu@email.com"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="field">
+          <label class="label" for="login-pass">Contraseña</label>
+          <div class="control">
+            <input
+              id="login-pass"
+              class="input"
+              type="password"
+              placeholder="******"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Botones ingreso - registro -->
+        <div class="field has-text-centered">
+          <button id="btn-login" class="button is-primary is-fullwidth">
+            Ingresar
+          </button>
+          <button id="btn-show-register" class="button is-light is-fullwidth">
+            Registrarse
+          </button>
+        </div>
+      </div>
     </section>
 
-    <section id="seleccion-rol" style="display: none;">
-        <p>Seleccioná tu rol:</p>
-        <button id="btn-alumnx">Soy alumnx</button>
-        <button id="btn-profe">Soy profe</button>
-    </section>
+    <!-- DASHBOARD ESTUDIANTE -->
+    <section id="student-dashboard" class="section is-hidden"></section>
 
+    <!-- DASHBOARD DOCENTE -->
+    <section id="teacher-dashboard" class="section is-hidden"></section>
 
-    <section id="formulario-contenedor" style="display: none;">
+    <!-- LIBRERÍAS -->
 
-        <form id="form-login" style="display: none;">
-            <h2>Ingresá a tu cuenta</h2>
-            <label for="login-mail">Mail:</label>
-            <input type="email" id="login-mail" required>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
 
-            <label for="login-password">Contraseña:</label>
-            <input type="password" id="login-password" required>
-
-            <button type="submit">Ingresar</button>
-            <p id="login-error" style="color: red;"></p>
-        </form>
-
-        <form id="form-register" style="display: none;">
-            <h2>Registrate</h2>
-
-            <label for="register-nombre">Nombre y Apellido:</label>
-            <input type="text" id="register-nombre" required>
-
-            <label for="register-mail">Mail:</label>
-            <input type="email" id="register-mail" required>
-
-            <label for="register-password">Contraseña:</label>
-            <input type="password" id="register-password" required>
-
-            <div id="extra-fields"></div>
-
-            <button type="submit">Registrarse</button>
-            <p id="register-error" style="color: red;"></p>
-        </form>
-
-    </section>
-
-
-    <section id="dashboard" style="display: none;"></section>
-
-    <section id="registro-exitoso" style="display: none;">
-        <p>✅ ¡Tus datos han sido registrados con éxito!</p>
-        <p>¿Querés iniciar sesión ahora?</p>
-        <button id="btn-ir-a-login">Sí, iniciar sesión</button>
-        <button id="btn-volver-inicio">No, volver al inicio</button>
-    </section>
-
-    <script src="./js/clases.js"></script>
-    <script src="./js/data.js"></script>
-    <script src="./js/main.js"></script>
-
-</body>
-
+    <!-- SCRIPT PRINCIPAL -->
+    <script type="module" src="./js/main.js"></script>
+  </body>
 </html>

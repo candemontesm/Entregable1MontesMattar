@@ -1,22 +1,62 @@
 [
-    {
-        "id": 1,
-        "firstName": "Juan",
-        "lastName": "Pérez",
-        "dni": "12345678",
-        "legajo": "A001",
-        "course": "3°A",
-        "email": "juan.perez@cpem30.edu.ar",
-        "password": "Clave123"
-    },
-    {
-        "id": 2,
-        "firstName": "Lucía",
-        "lastName": "Acosta",
-        "dni": "22334455",
-        "legajo": "A002",
-        "course": "3°A",
-        "email": "lucia.acosta@cpem30.edu.ar",
-        "password": "Clave123"
-    }
+  {
+    "id": 1,
+    "firstName": "Juan",
+    "lastName": "Pérez",
+    "dni": "12345678",
+    "legajo": "A001",
+    "course": "3°A",
+    "email": "juan.perez@cpem30.edu.ar",
+    "password": "Clave123"
+  },
+  {
+    "id": 2,
+    "firstName": "Lucía",
+    "lastName": "Acosta",
+    "dni": "22334455",
+    "legajo": "A002",
+    "course": "3°B",
+    "email": "lucia.acosta@cpem30.edu.ar",
+    "password": "Clave123"
+  },
+  {
+    "id": 3,
+    "firstName": "Valentina",
+    "lastName": "Ríos",
+    "dni": "33445566",
+    "legajo": "B001",
+    "course": "4°A",
+    "email": "valentina.rios@cpem30.edu.ar",
+    "password": "Clave123"
+  },
+  {
+    "id": 4,
+    "firstName": "Agustín",
+    "lastName": "Morales",
+    "dni": "44556677",
+    "legajo": "B002",
+    "course": "4°B",
+    "email": "agustin.morales@cpem30.edu.ar",
+    "password": "Clave123"
+  },
+  {
+    "id": 5,
+    "firstName": "Camila",
+    "lastName": "Soto",
+    "dni": "55667788",
+    "legajo": "C001",
+    "course": "5°A",
+    "email": "camila.soto@cpem30.edu.ar",
+    "password": "Clave123"
+  },
+  {
+    "id": 6,
+    "firstName": "Tomás",
+    "lastName": "López",
+    "dni": "66778899",
+    "legajo": "C002",
+    "course": "5°B",
+    "email": "tomas.lopez@cpem30.edu.ar",
+    "password": "Clave123"
+  }
 ]
